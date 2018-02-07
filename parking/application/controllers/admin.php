@@ -1,683 +1,812 @@
 <?php
+defined('BASEPATH') OR exit('No direct script access allowed');
 
- class Admin extends CI_Controller{
-	 
+class Admin extends CI_Controller {
+
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->library('session');
-		$this->load->helper(array('form', 'url'));
+		$this->load->helper(array('form'));
 		$this->load->library("pagination");
+		$this->load->database();
 
-
-		$admin_user = $this->session->userdata('admin');
+		$this->load->model('Admin_model');
+		$this->load->model('User_model');
+		
+		$admin_id = $this->session->userdata('admin');
 		$session = $this->session->userdata('session');
-		$aaa = $this->session->userdata('aaa');
-		if(empty($admin_user) || empty($session)  || empty($aaa) )
+		if(empty($admin_id) || empty($session))
 		{	
 			redirect('member/adminlogin');
 		}
-		$this->load->model('trans');
-		$this->load->model('user_model');
 	
 	}
 	public function index(){
-		$this->load->model('setting');
-		 
-		$data['setting']="";
-		$data['type']=0;
-
-		$data['title'] = 'Airrv';
-		
-		$admin = $this->session->userdata('admin');
-		$t = $this->session->userdata('wire');
-		$type = $this->session->userdata('type');			
-			
-		$this->load->view('home/headar',$data);	
-	
-		$data['wire']=$this->setting->getWireList('ware','name','asc',2);
-
-		$data['ware'] = $t;
-		
-		if($type == 1)
-		$this->load->view('home/index',$data);
-		else
-			$this->load->view('home/blank',$data);
-
-		$this->load->view('home/footer');		 
+		$data['title'] = 'Dashboard';
+		$this->load->view('admin/header',$data);
+		$this->load->view('admin/dashboard',$data);
+		$this->load->view('admin/footer');
 	}
-	public function change_password(){
-		$this->load->model('setting');
-		 
-		$data['setting']="";
-		$data['type']=0;
-
-		$data['title'] = 'Airrv';
-		
-		$admin = $this->session->userdata('admin');
-		$t = $this->session->userdata('wire');
-		$type = $this->session->userdata('type');			
-			
-		$this->load->view('home/headar',$data);	
-	
-		$data['wire']=$this->setting->getWireList('ware','name','asc',2);
-
-		$data['ware'] = $t;
-		
-		if($type == 1)
-		$this->load->view('home/change_password',$data);
-		else
-			$this->load->view('home/change_password',$data);
-
-		$this->load->view('home/footer');		 
-	}
-	public function password_change(){
-		$old_pass = $this->input->post('old_pass');
-		$new_pass = $this->input->post('new_pass');
-		$confirm_pass = $this->input->post('confirm_pass');
-
-		$id = $this->session->userdata('admin');
-		$this->db->where('id',$id);
-        $query = $this->db->get('password');
-        if ($query->num_rows()>0) {
-        	$data = $query->row();
-        	$password = $data->password;
-
-        	if ($password == $old_pass) {
-        		$change_pass=array(
-	                'password' => $new_pass
-	            );
-	            $this->db->where('id',$id);
-	            $this->db->update('password',$change_pass);
-	            if ($this->db->affected_rows()>0) {
-	            	$msg['success'] = 'Password Change successfully.';
-	            }
-	            else{
-	        		$msg['try_new'] = 'Type new password and try again!';
-	        	}
-        	}else{
-        		$msg['mismatch'] = 'Old Password not matched !';
-        	}
-        }
-        echo json_encode($msg);
-
-	}
-
-	function logout()
-    {
+	public function logout(){
 		$this->session->unset_userdata('admin');
-		$this->session->unset_userdata('type');
-		$this->session->unset_userdata('ware');
-
-		$this->session->unset_userdata('aaa');
 		$this->session->unset_userdata('session');
 		redirect('admin');
+	} //LOGOUT AND DESTROY SESSION
+
+
+
+	public function new_resorts(){
+		$data['title'] = 'New Resorts';
+		$this->load->view('admin/header',$data);
+		$this->load->view('admin/new_resorts',$data);
+		$this->load->view('admin/footer');
+	}
+	public function view_resorts(){
+		$data['title'] = 'View Resorts';
+		$this->load->view('admin/header',$data);
+		$this->load->view('admin/view_resorts',$data);
+		$this->load->view('admin/footer');
 	}
 
-	public function change_wire($id=null){
-		
-		
-		if(!empty($id)){
-			$this->session->unset_userdata('admin');
-			$this->session->unset_userdata('wire');
-			$this->session->set_userdata('wire',$id);
-			
-			$this->db->where('ware',$id);
-			$info = $this->db->get('password');
-			$row=$info->row();
-
-			$this->session->set_userdata('admin',$row->id);
-		}
-		
-		redirect('admin');
-		
+	public function new_hotel(){
+		$data['title'] = 'New Hotel';
+		$this->load->view('admin/header',$data);
+		$this->load->view('admin/new_hotel',$data);
+		$this->load->view('admin/footer');
 	}
 
-
-	public function create_user(){
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
-
-		$data['title'] = 'Create User ';
-		
-		$this->load->view('home/headar',$data);
-
-
-		$this->load->view('admin/create_user',$data);
-		
-		$this->load->view('home/footer');
+	public function view_hotel(){
+		$data['title'] = 'View Hotel';
+		$this->load->view('admin/header',$data);
+		$this->load->view('admin/view_hotel',$data);
+		$this->load->view('admin/footer');
 	}
-	public function user_all()
-	{
-		
-		$this->load->model('setting');
-		$data['setting']="";
-		$data['type']=0;
-
-
-
-		$data['title'] = 'User All';
-		
-		$admin = $this->session->userdata('admin');
-		$t = $this->session->userdata('wire');
-		$type = $this->session->userdata('type');
-		
-		$this->load->view('home/headar',$data);
-		
-		$data['user']=$this->setting->getAll('password');
-
-		$this->load->view('admin/user_all',$data);
-		$this->load->view('home/footer');
-	} //end user and ware all working
-
-
-	public function buyers_vendor(){
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
-
-		$data['title'] = 'Buyers and Vendors';
-		
-		$this->load->view('home/headar',$data);
-
-		$data['alluser']=$this->setting->getAll_data('alluser');
-
-
-		$this->load->view('admin/buyers_vendor',$data);
-		
-		$this->load->view('home/footer');
+	public function new_promotion(){
+		$data['title'] = 'New Promotion';
+		$this->load->view('admin/header',$data);
+		$this->load->view('admin/new_promotion',$data);
+		$this->load->view('admin/footer');
 	}
 
-	public function host_approval(){
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
-
-
-		$data['host_history'] = $this->user_model->host_approval();
-		$data['host_success'] = $this->user_model->host_success();
-
-		$data['title'] = 'Host Review';
-		
-		$this->load->view('home/headar',$data);
-
-		$data['alluser']=$this->setting->getAll_data('alluser');
-
-
-		$this->load->view('admin/host_approval',$data);
-		
-		$this->load->view('home/footer');
-	}
-
-
-	public function approve_now(){
+	public function view_promotion(){
+		$data['title'] = 'View Promotion';
+		$this->load->view('admin/header',$data);
+		$this->load->view('admin/view_promotion',$data);
+		$this->load->view('admin/footer');
+	}    
+    public function new_packages(){
+        $data['title'] = 'New Packages';
+        $this->load->view('admin/header',$data);
+        $this->load->view('admin/new_packages',$data);
+        $this->load->view('admin/footer');
+    }
+    public function view_packages(){
+        $data['title'] = 'View Packages';
+        $this->load->view('admin/header',$data);
+        $this->load->view('admin/view_packages',$data);
+        $this->load->view('admin/footer');
+    }
+	
+    /* # DELETE ALL INFORMATION # */
+    public function delete_promotion(){
 		$id = $this->input->post('id');
 
-		$up_status = array('status' => 1 );
-		
-		$this->db->where('id', $id);
-		$this->db->update('host', $up_status);
-		if ($this->db->affected_rows()>0) {
-			$msg = 1;
-		}else{
-			$msg = 2;
-		}
-		echo json_encode($msg);
-	}
-	public function disapprove_host(){
-		$id = $this->input->post('id');
+        $this->db->where('id',$id);
+        $query = $this->db->get('promotions');
+        $row = $query->row();
+        $image = $row->userfile;
+        unlink('./web_assets/img/promotions/'.$image);
 
-		$up_status = array('status' => 0 );
-		
-		$this->db->where('id', $id);
-		$this->db->update('host', $up_status);
-		if ($this->db->affected_rows()>0) {
-			$msg = 1;
-		}else{
-			$msg = 2;
-		}
-		echo json_encode($msg);
-	}
-
-	public function delete_host(){
-		$id = $this->input->post('id');
-
-		$up_status = array('status' => 2 );
-		
-		$this->db->where('id', $id);
-		$this->db->update('host', $up_status);
-		if ($this->db->affected_rows()>0) {
-			$msg = 1;
-		}else{
-			$msg = 2;
-		}
-		echo json_encode($msg);
-	}
-
-
-	//user details
-	public function user_details($id){
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
-
-
-		$data['host_user'] = $this->user_model->host_user_details($id);
-
-
-		$data['title'] = 'User Details';
-		
-		$this->load->view('home/headar',$data);
-
-		$data['alluser']=$this->setting->getAll_data('alluser');
-
-
-		$this->load->view('admin/user_details',$data);
-		
-		$this->load->view('home/footer');
-	}
-
-
-	public function user_controls(){
-		$id = $this->input->post('id');
-		$assign = $this->input->post('assign');
-
-		if ($assign=='a') {
-			$status = 1;
-		}elseif ($assign=='d') {
-			$status = 2;
-		}
-
-		$up_status = array('status' => $status );
-
-		$this->db->where('id',$id);
-		$this->db->update('alluser',$up_status);
-		if ($this->db->affected_rows()>0) {
-
-			$this->db->where('userid',$id);
-			$this->db->where('reviews',1);
-			$query = $this->db->get('host');
-			if ($query->num_rows()>0) {
-				$up_host_st = array('status' => $status );
-				$this->db->where('userid',$id);
-				$this->db->where('reviews',1);
-				$this->db->update('host',$up_host_st);
-				if ($this->db->affected_rows()>0) {
-					$msg = 1;
-				}else{
-					$msg = 2;
-				}
-			}else{
-				$msg = 1;
-			}
-			
-		}else{
-			$msg = 2;
-		}
-		echo json_encode($msg);		
-	}
-
-
-
-	public function buyer_vendor_status(){
-
-		$id = $this->input->post('userid');
-		$email = $this->input->post('email');
-		$status = $this->input->post('user_status');
-
-		$data['s_results']=$this->user_model->all_search_user($id,$email,$status,'alluser');
-
-
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
-
-		$data['title'] = 'Buyers and Vendors';
-		
-		$this->load->view('home/headar',$data);
-
-		$data['alluser']=$this->setting->getAll_data('alluser');
-
-
-		$this->load->view('admin/buyer_vendor_status',$data);
-		
-		$this->load->view('home/footer');
-	}
-	public function autocomplete_view_email()
-	{
-		$this->load->database();
-		$email=$this->input->post('id');
-		$this->db->like('email', $email);
-		$this->db->limit(20);
-		$info=$this->db->get('alluser');
-		if ($info->num_rows()>0) {
-			$data=array();
-			foreach($info->result_array() as $val)
-			{
-				array_push($data,$val['email']);
-			}
-			echo json_encode($data);
-		}
-	} //all user view
-
-
-
-
-
-	public function autocomplete_view_state()
-	{
-		$this->load->database();
-		$state=$this->input->post('id');
-		$this->db->like('state', $state);
-		$this->db->where('reviews', 1);
-		$this->db->group_by('state');
-		$this->db->limit(20);
-		$info=$this->db->get('host');
-		if ($info->num_rows()>0) {
-			$data=array();
-			foreach($info->result_array() as $val)
-			{
-				array_push($data,$val['state']);
-			}
-			echo json_encode($data);
-		}
-	}
-
-
-	public function autocomplete_view_city()
-	{
-		$this->load->database();
-		$city=$this->input->post('id');
-		$this->db->like('city', $city);
-		$this->db->where('reviews', 1);
-		$this->db->group_by('city');
-		$this->db->limit(20);
-		$info=$this->db->get('host');
-		if ($info->num_rows()>0) {
-			$data=array();
-			foreach($info->result_array() as $val)
-			{
-				array_push($data,$val['city']);
-			}
-			echo json_encode($data);
-		}
-	}
-
-
-	public function autocomplete_view_street_location()
-	{
-		$this->load->database();
-		$location=$this->input->post('id');
-		$this->db->like('location', $location);
-		$this->db->where('reviews', 1);
-		$this->db->group_by('location');
-		$this->db->limit(20);
-		$info=$this->db->get('host');
-		if ($info->num_rows()>0) {
-			$data=array();
-			foreach($info->result_array() as $val)
-			{
-				array_push($data,$val['location']);
-			}
-			echo json_encode($data);
-		}
-	}
-
-
-	public function allhost_search(){
-
-		$state = $this->input->post('state');
-		$city = $this->input->post('city');
-		$location = $this->input->post('location');
-		$status = $this->input->post('status');
-
-		$data['s_results']=$this->user_model->allhost_search($state,$city,$location,$status,'host');
-
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
-
-
-		$data['host_history'] = $this->user_model->host_approval();
-		$data['host_success'] = $this->user_model->host_success();
-
-		$data['title'] = 'Host Review';
-		
-		$this->load->view('home/headar',$data);
-
-		$data['alluser']=$this->setting->getAll_data('alluser');
-
-
-		$this->load->view('admin/allhost_search',$data);
-		
-		$this->load->view('home/footer');
-	}
-
-
-	public function inbox(){
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
-
-
-		$data['title'] = 'Message';
-		
-		$this->load->view('home/headar',$data);
-
-		$data['admin_inbox'] = $this->user_model->admin_inbox_list();
-		$data['alluser']=$this->setting->getAll_data('alluser');
-
-
-		$this->load->view('admin/inbox',$data);
-		
-		$this->load->view('home/footer');
-	}
-	public function reply_inbox(){
-		$all_val = $this->input->post('all_val');
-		$explode = explode(':', $all_val);
-
-		$id = $explode[0];
-		$id1 = $explode[1];
-		$id2 = $explode[2];
-
-		$result['final'] = $this->user_model->inbox_messege($id);
-
+		$result = $this->Admin_model->delete_promotion($id);
 		echo json_encode($result);
 	}
+	public function delete_resort(){
+		$id = $this->input->post('id');
+
+        $this->db->where('id',$id);
+        $query = $this->db->get('resorts');
+        $row = $query->row();
+        $image = $row->userfile;
+        unlink('./web_assets/img/resorts/'.$image);
+
+		$result = $this->Admin_model->delete_resort($id);
+		echo json_encode($result);
+	}
+    public function delete_hotels(){
+        $id = $this->input->post('id');
+
+        $this->db->where('id',$id);
+        $query = $this->db->get('hotels');
+        $row = $query->row();
+        $image = $row->userfile;
+        unlink('./web_assets/img/hotels/'.$image);
+
+        $result = $this->Admin_model->delete_hotels($id);
+        echo json_encode($result);        
+    }
+    public function delete_rooms(){
+        $id = $this->input->post('id');
+
+        $this->db->where('id',$id);
+        $query = $this->db->get('rooms');
+        $row = $query->row();
+        $image = $row->userfile;
+        unlink('./web_assets/img/rooms/'.$image);
+
+        $result = $this->Admin_model->delete_rooms($id);
+        echo json_encode($result);        
+    }
+
+    /* # ADD/INSERT ALL INFORMATION # */
+    public function add_promotion(){
+        $this->load->helper(array('form','url'));
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('offer_title','offer_title','trim|required');
+        $this->form_validation->set_rules('resort_name','resort_name','trim|required');
+        $this->form_validation->set_rules('offer_code','offer_code','trim|required');
+
+        $offer_title = $this->input->post('offer_title');
+        $offer_des = $this->input->post('offer_des');
+        $resort_name = $this->input->post('resort_name');
+        $offer_code = $this->input->post('offer_code');
+        $stay_during = $this->input->post('stay_during');
+        $minimum_stay = $this->input->post('minimum_stay');
+        $validity = $this->input->post('validity');
+        $offer_expiry = $this->input->post('offer_expiry');
+        $valid_villas = $this->input->post('valid_villas');
+
+        if ($this->form_validation->run()==false) {
+            $this->productadded();
+        }else{
+
+            $insert=array(
+                'offer_title' => $offer_title,
+                'offer_des' => $offer_des,
+                'resort_name' => $resort_name,
+                'offer_code' => $offer_code,
+                'stay_during' => $stay_during,
+                'minimum_stay' => $minimum_stay,
+                'validity' => $validity,
+                'offer_expiry' => $offer_expiry,
+                'valid_villas' => $valid_villas
+            );
+            $this->db->insert('promotions',$insert);
+
+            
+
+            $config['upload_path'] = './web_assets/img/promotions/';
+
+            $config['allowed_types'] = 'jpg|jpeg|png|gif';
+            $config['max_size'] = '200000';
+            $config['max_width'] = '1524000';
+            $config['max_height'] = '1000000';
+
+            $this->load->library('upload', $config);                        
+            $upload = $this->upload->do_upload('userfile');
+
+            if($upload == true){
+                
+                $this->db->limit(1);
+                $this->db->order_by("id", 'desc'); 
+                $query = $this->db->get("promotions");     
+                $row = $query->row();
+                $lastid=$row->id;
+
+                $update_img=array(
+                    'userfile' => $_FILES['userfile']['name']
+                );
+                $this->db->where('id',$lastid);
+                $this->db->update('promotions',$update_img);
+            }
+
+            redirect('admin/view_promotion');
 
 
-	public function submit_messege(){
-		$all_val = $this->input->post('all_val');
-		$explode = explode(':', $all_val);
 
-		$id = $explode[0];
-		$id1 = $explode[1];
-		$id2 = $explode[2];
-
-		$details = $this->input->post('details');
-
-		$insert_message = array(
-			'details' => $details,
-			'root' => $id, 
-			'id1' => $id1, 
-			'id2' => $id2, 
-			'type' => $id1 
-		);
-        $this->db->insert("inbox",$insert_message);
-        if ($this->db->affected_rows()>0) {
-        	$result['final'] = $this->user_model->inbox_messege($id);
         }
-        echo json_encode($result);
-	}
+    }
+	public function add_resorts(){
+        $this->load->helper(array('form','url'));
+        $this->load->library('form_validation');
 
-	public function request_inbox(){
-		$email = $this->input->post('email');
+        $this->form_validation->set_rules('title','title','trim|required');
+        $this->form_validation->set_rules('rating','rating','trim|required');
 
-		$id2 = $this->user_model->find_id_by_email($email);
+        $title = $this->input->post('title');
+        $rating = $this->input->post('rating');
+        $atoll = $this->input->post('atoll');
+        $no_of_villas = $this->input->post('no_of_villas');
+        $duration = $this->input->post('duration');
+        $Airport = $this->input->post('airport');
 
-		$chk = $this->user_model->chk_id_by_email($id2);
-		if ($chk->num_rows()>0) {
-			$result['old'] = 3;
-		}else{
+        if ($this->form_validation->run()==false) {
+            $this->productadded();
+        }else{
 
-			$insert_message = array(
-				'id1' => 0, 
-				'id2' => $id2, 
-				'type' => 0 
-			);
-	        $this->db->insert("inbox",$insert_message);
-	        if ($this->db->affected_rows()>0) {
-	        	$result['success'] = 1;
-	        }else{
-	        	$result['failed'] = 2;
-	        }
-	    }
-	    
-        echo json_encode($result);
-	}
+            $insert=array(
+                'title' => $title,
+                'rating' => $rating,
+                'atoll' => $atoll,
+                'no_of_villas' => $no_of_villas,
+                'duration' => $duration,
+                'airport' => $Airport
+            );
+            $this->db->insert('resorts',$insert);
 
+            
 
-	public function payments(){
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
+            $config['upload_path'] = './web_assets/img/resorts/';
 
+            $config['allowed_types'] = 'jpg|jpeg|png|gif';
+            $config['max_size'] = '200000';
+            $config['max_width'] = '1524000';
+            $config['max_height'] = '1000000';
 
-		$data['title'] = 'Payments || Admin panel';
-		
-		$this->load->view('home/headar',$data);
+            $this->load->library('upload', $config);
+                        
+            $upload = $this->upload->do_upload('userfile');
+            
+            if($upload == true){
+                
+                $this->db->limit(1);
+                $this->db->order_by("id", 'desc'); 
+                $query = $this->db->get("resorts");     
+                $row = $query->row();
+                $lastid=$row->id;
 
-		$data['alluser']=$this->setting->getAll_data('alluser');
+                $update_img=array(
+                    'userfile' => $_FILES['userfile']['name']
+                );
+                $this->db->where('id',$lastid);
+                $this->db->update('resorts',$update_img);
+            }
 
-
-		$this->load->view('admin/payments',$data);
-		
-		$this->load->view('home/footer');
-	}
-	public function accounts(){
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
-
-
-		$data['title'] = 'Accounts || Admin panel';
-		
-		$this->load->view('home/headar',$data);
-
-		$data['alluser']=$this->setting->getAll_data('alluser');
-
-
-		$this->load->view('admin/accounts',$data);
-		
-		$this->load->view('home/footer');
-	}
-	public function withdraw_request(){
-		
-		$ware=$this->session->userdata('wire');
-		$type=$this->session->userdata('type');
-		$admin=$this->session->userdata('admin');
-		
-		$this->load->model('setting');
-		
-		$data['type']=0;
-		$data['ware']=$this->setting->getWare('ware','name','asc',1);
-
-
-		$data['title'] = 'Withdrw Request || Admin panel';
-		
-		$this->load->view('home/headar',$data);
-
-		$data['alluser']=$this->setting->getAll_data('alluser');
-
-
-		$this->load->view('admin/withdraw_request',$data);
-		
-		$this->load->view('home/footer');
-	}
+            redirect('admin/view_resorts');
 
 
 
-	public function payment_withdrw_by_admin(){
-		$values = $this->input->post('values');
+        }
+    }
+    
+	public function add_hotels(){
+        $this->load->helper(array('form','url'));
+        $this->load->library('form_validation');
 
-		$exp = explode(':', $values);
-		$id = $exp[0];
-		$assign = $exp[1];
+        $this->form_validation->set_rules('country','country','trim|required');
+        $this->form_validation->set_rules('title','title','trim|required');
+        $this->form_validation->set_rules('rating','rating','trim|required');
 
-		$up_withdraw = array('status' => $assign );
-		$this->db->where('id',$id);
-		$this->db->update('payments',$up_withdraw);
-		if ($this->db->affected_rows()>0) {
-			$msg = 1;
-		}else{
-			$msg = 2;
-		}
+        $country = $this->input->post('country');
+        $title = $this->input->post('title');
+        $rating = $this->input->post('rating');
+        $district = $this->input->post('district');
+        $no_of_rooms = $this->input->post('no_of_rooms');
+        $duration = $this->input->post('duration');
+        $Airport = $this->input->post('airport');
 
-		
-		echo json_encode($msg);		
-	}
+        if ($this->form_validation->run()==false) {
+            $this->view_hotel();
+        }else{
+
+            $insert=array(
+                'country' => $country,
+                'title' => $title,
+                'rating' => $rating,
+                'district' => $district,
+                'no_of_rooms' => $no_of_rooms,
+                'duration' => $duration,
+                'airport' => $Airport
+            );
+            $this->db->insert('hotels',$insert);
+
+            
+
+            $config['upload_path'] = './web_assets/img/hotels/';
+
+            $config['allowed_types'] = 'jpg|jpeg|png|gif';
+            $config['max_size'] = '200000';
+            $config['max_width'] = '1524000';
+            $config['max_height'] = '1000000';
+
+            $this->load->library('upload', $config);                        
+            $upload = $this->upload->do_upload('userfile');
+
+
+            
+            if($upload == true){
+                
+                $this->db->limit(1);
+                $this->db->order_by("id", 'desc'); 
+                $query = $this->db->get("hotels");     
+                $row = $query->row();
+                $lastid=$row->id;
+
+                $update_img=array(
+                    'userfile' => $_FILES['userfile']['name']
+                );
+                $this->db->where('id',$lastid);
+                $this->db->update('hotels',$update_img);
+            }
+
+            redirect('admin/view_hotel');
 
 
 
+        }
+    }
+    public function add_packages(){
+        $this->load->helper(array('form','url'));
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('title','title','trim|required');
+
+        $title = $this->input->post('title');
+
+        if ($this->form_validation->run()==false) {
+            $this->new_packages();
+        }else{
+
+            $insert=array(
+                'title' => $title
+            );
+            $this->db->insert('packages',$insert);
+            
+
+            $config['upload_path'] = './web_assets/img/packages/';
+            $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
+            $config['max_size'] = '200000';
+            $config['max_width'] = '1524000';
+            $config['max_height'] = '1000000';
+
+            $this->load->library('upload', $config);
+            $this->load->library('image_lib');
+                        
+            $upload = $this->upload->do_upload('userfile');
+            $upload1 = $this->upload->do_upload('pfile_name');
+
+
+            if($upload == true && $upload1 == true){
+
+                $this->db->limit(1);
+                $this->db->order_by("id", 'desc'); 
+                $query = $this->db->get("packages");     
+                $row = $query->row();
+                $lastid=$row->id;
+
+                $update_img=array(
+                    'userfile' => $_FILES['userfile']['name'],
+                    'file_name' => $_FILES['pfile_name']['name']
+                );
+                $this->db->where('id',$lastid);
+                $this->db->update('packages',$update_img);
+
+            }
+
+            redirect('admin/view_packages');
 
 
 
+        }
+    }
 
 
+    /* #### DETAILS PAGE WORKSTATION #### */
+    public function details($type,$hotel_type,$id){
+        $type = $type;
+        $hotel_type = $hotel_type;
+        $re_id = $id;
+        if ($re_id == 0 || $type == 0) {
+            $this->index();
+        }else{
+
+            $this->db->where('type',$type);
+            $this->db->where('hotel_type',$hotel_type);
+            $this->db->where('re_id',$re_id);
+            $check_query = $this->db->get('details');
+            if ($check_query->num_rows()>0) {
+                $data['value'] = $check_query;
+            }else{
+                $insert_new = array(
+                    're_id' => $re_id,
+                    'type' => $type,
+                    'hotel_type' => $hotel_type
+                );
+                $this->db->insert('details',$insert_new);
+
+                $this->db->where('type',$type);
+                $this->db->where('hotel_type',$hotel_type);
+                $this->db->where('re_id',$re_id);
+                $data['value'] = $this->db->get('details');
+            }
+
+            $data['title'] = 'Details';
+            $this->load->view('admin/header',$data);
+            $this->load->view('admin/details',$data);
+            $this->load->view('admin/footer');
+        }
+    }
+
+    public function add_overview(){
+        $id = $this->input->post('id');
+        $overview = $this->input->post('overview');
+
+        $update = array(
+            'overview' => $overview
+        );
+        $this->db->where('id',$id);
+        $this->db->update('details',$update);
+        if ($this->db->affected_rows()>0) {
+            $msg = 'Updated.';
+        }else{
+            $msg = 'Not changed.';
+        }
+
+        echo json_encode($msg);
+    }
+    public function add_accommodation(){
+
+        $this->load->helper(array('form','url'));
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('title','title','trim|required');
+
+        $details_id = $this->input->post('details_id');
+        $re_id = $this->input->post('re_id');
+        $type = $this->input->post('type');
+        $hotel_type = $this->input->post('hotel_type'); //needed redirect
+
+
+        $title = $this->input->post('title');
+        $description = $this->input->post('description');
+
+
+        if ($this->form_validation->run()==false) {
+            $this->index();
+        }else{
+
+            $insert=array(
+                'details_id' => $details_id,
+                'title' => $title,
+                'description' => $description
+            );
+            $this->db->insert('rooms',$insert);
+            
+
+            $config['upload_path'] = './web_assets/img/rooms/';
+            $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
+            $config['max_size'] = '200000';
+            $config['max_width'] = '1524000';
+            $config['max_height'] = '1000000';
+
+            $this->load->library('upload', $config);                        
+            $upload = $this->upload->do_upload('userfile');
+
+            if($upload == true){
+
+                $this->db->limit(1);
+                $this->db->order_by("id", 'desc'); 
+                $query = $this->db->get("rooms");     
+                $row = $query->row();
+                $lastid=$row->id;
+
+                $update_img=array(
+                    'userfile' => $_FILES['userfile']['name']
+                );
+                $this->db->where('id',$lastid);
+                $this->db->update('rooms',$update_img);
+            }
+
+            redirect("admin/details/$type/$hotel_type/$re_id");
+        }
+        
+    }
+
+
+    //EDITING SECTION
+    public function edit_promotion($id){
+        $data['pro_id'] = $id;
+        $data['title'] = 'Edit Promotion';
+        $this->load->view('admin/header',$data);
+        $this->load->view('admin/edit_promotion',$data);
+        $this->load->view('admin/footer');
+    }
+    public function update_promotion(){
+        $this->load->helper(array('form','url'));
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('pro_id','pro_id','trim|required');
+        $this->form_validation->set_rules('offer_title','offer_title','trim|required');
+        $this->form_validation->set_rules('resort_name','resort_name','trim|required');
+        $this->form_validation->set_rules('offer_code','offer_code','trim|required');
+
+        $pro_id = $this->input->post('pro_id');
+        $offer_title = $this->input->post('offer_title');
+        $offer_des = $this->input->post('offer_des');
+        $resort_name = $this->input->post('resort_name');
+        $offer_code = $this->input->post('offer_code');
+        $stay_during = $this->input->post('stay_during');
+        $minimum_stay = $this->input->post('minimum_stay');
+        $validity = $this->input->post('validity');
+        $offer_expiry = $this->input->post('offer_expiry');
+        $valid_villas = $this->input->post('valid_villas');
+
+        if ($this->form_validation->run()==false) {
+            $this->productadded();
+        }else{
+
+            $update=array(
+                'offer_title' => $offer_title,
+                'offer_des' => $offer_des,
+                'resort_name' => $resort_name,
+                'offer_code' => $offer_code,
+                'stay_during' => $stay_during,
+                'minimum_stay' => $minimum_stay,
+                'validity' => $validity,
+                'offer_expiry' => $offer_expiry,
+                'valid_villas' => $valid_villas
+            );
+            $this->db->where('id',$pro_id);
+            $this->db->update('promotions',$update);
+
+            
+            if ($_FILES['userfile']['name'] != '') {
+
+                $this->db->where('id',$pro_id);
+                $query = $this->db->get('promotions');
+                $row = $query->row();
+                $image = $row->userfile;
+                unlink('./web_assets/img/promotions/'.$image);
+                
+                $config['upload_path'] = './web_assets/img/promotions/';
+                $config['allowed_types'] = 'jpg|jpeg|png|gif';
+                $config['max_size'] = '200000';
+                $config['max_width'] = '1524000';
+                $config['max_height'] = '1000000';
+
+                $this->load->library('upload', $config);                        
+                $upload = $this->upload->do_upload('userfile');
+
+                if($upload == true){
+                    $update_img=array(
+                        'userfile' => $_FILES['userfile']['name']
+                    );
+                    $this->db->where('id',$pro_id);
+                    $this->db->update('promotions',$update_img);
+                }
+            }
+
+            redirect('admin/view_promotion');
+
+
+
+        }
+    }
+    public function edit_package($id){
+        $data['pack_id'] = $id;
+        $data['title'] = 'Edit Packages';
+        $this->load->view('admin/header',$data);
+        $this->load->view('admin/edit_package',$data);
+        $this->load->view('admin/footer');
+    }
+    public function update_packages(){
+        $this->load->helper(array('form','url'));
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('pack_id','pack_id','trim|required');
+        $this->form_validation->set_rules('title','title','trim|required');
+
+        $pack_id = $this->input->post('pack_id');
+        $title = $this->input->post('title');
+
+        if ($this->form_validation->run()==false) {
+            $this->new_packages();
+        }else{
+
+            $update=array(
+                'title' => $title
+            );
+            $this->db->where('id',$pack_id);
+            $this->db->update('packages',$update);
+            
+            if ($_FILES['userfile']['name'] != '') {
+
+                $this->db->where('id',$pack_id);
+                $query = $this->db->get('packages');
+                $row = $query->row();
+                $image = $row->userfile;
+                unlink('./web_assets/img/packages/'.$image);
+
+                $config['upload_path'] = './web_assets/img/packages/';
+                $config['allowed_types'] = 'jpg|jpeg|png|gif';
+
+                $this->load->library('upload', $config);
+                            
+                $upload = $this->upload->do_upload('userfile');
+                if($upload == true){
+                    $update_img=array(
+                        'userfile' => $_FILES['userfile']['name']
+                    );
+                    $this->db->where('id',$pack_id);
+                    $this->db->update('packages',$update_img);
+                }
+            }
+            if ($_FILES['pfile_name']['name'] != '') {
+
+                /*$this->db->where('id',$pack_id);
+                $query = $this->db->get('packages');
+                $row = $query->row();
+                $file_name = $row->file_name;
+                unlink('./web_assets/img/packages/'.$file_name);*/
+
+                $config['upload_path'] = './web_assets/img/packages/';
+                $config['allowed_types'] = 'jpg|jpeg|png|gif|pdf';
+
+                $this->load->library('upload', $config);
+                            
+                $upload = $this->upload->do_upload('pfile_name');
+                if($upload == true){
+                    $update_img=array(
+                        'file_name' => $_FILES['pfile_name']['name']
+                    );
+                    $this->db->where('id',$pack_id);
+                    $this->db->update('packages',$update_img);
+                }
+            }
+
+            redirect('admin/view_packages');
+
+
+
+        }
+    }
+    public function edit_hotel($id){
+        $data['pack_id'] = $id;
+        $data['title'] = 'Edit Hotel';
+        $this->load->view('admin/header',$data);
+        $this->load->view('admin/edit_hotel',$data);
+        $this->load->view('admin/footer');
+    }
+    public function update_hotels(){
+        $this->load->helper(array('form','url'));
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('hotel_id','hotel_id','trim|required');
+        $this->form_validation->set_rules('country','country','trim|required');
+        $this->form_validation->set_rules('title','title','trim|required');
+        $this->form_validation->set_rules('rating','rating','trim|required');
+
+        $id = $this->input->post('hotel_id');
+        $country = $this->input->post('country');
+        $title = $this->input->post('title');
+        $rating = $this->input->post('rating');
+        $district = $this->input->post('district');
+        $no_of_rooms = $this->input->post('no_of_rooms');
+        $duration = $this->input->post('duration');
+        $Airport = $this->input->post('airport');
+
+        if ($this->form_validation->run()==false) {
+            $this->view_hotel();
+        }else{
+
+            $update=array(
+                'country' => $country,
+                'title' => $title,
+                'rating' => $rating,
+                'district' => $district,
+                'no_of_rooms' => $no_of_rooms,
+                'duration' => $duration,
+                'airport' => $Airport
+            );
+            $this->db->where('id',$id);
+            $this->db->update('hotels',$update);
+
+            
+            if ($_FILES['userfile']['name'] != '') {
+
+                $this->db->where('id',$id);
+                $query = $this->db->get('hotels');
+                $row = $query->row();
+                $image = $row->userfile;
+                unlink('./web_assets/img/hotels/'.$image);
+
+                $config['upload_path'] = './web_assets/img/hotels/';
+                $config['allowed_types'] = 'jpg|jpeg|png|gif';
+                $config['max_size'] = '200000';
+                $config['max_width'] = '1524000';
+                $config['max_height'] = '1000000';
+
+                $this->load->library('upload', $config);                        
+                $upload = $this->upload->do_upload('userfile');
+
+                if($upload == true){
+
+                    $update_img=array(
+                        'userfile' => $_FILES['userfile']['name']
+                    );
+                    $this->db->where('id',$id);
+                    $this->db->update('hotels',$update_img);
+                }
+            }
+
+            redirect('admin/view_hotel');
+
+
+
+        }
+    }
+    public function edit_resorts($id){
+        $data['pack_id'] = $id;
+        $data['title'] = 'Edit Resorts';
+        $this->load->view('admin/header',$data);
+        $this->load->view('admin/edit_resorts',$data);
+        $this->load->view('admin/footer');
+    }
+    public function update_resorts(){
+        $this->load->helper(array('form','url'));
+        $this->load->library('form_validation');
+
+        $this->form_validation->set_rules('resort_id','resort_id','trim|required');
+        $this->form_validation->set_rules('title','title','trim|required');
+        $this->form_validation->set_rules('rating','rating','trim|required');
+
+        $id = $this->input->post('resort_id');
+        $title = $this->input->post('title');
+        $rating = $this->input->post('rating');
+        $atoll = $this->input->post('atoll');
+        $no_of_villas = $this->input->post('no_of_villas');
+        $duration = $this->input->post('duration');
+        $Airport = $this->input->post('airport');
+
+        if ($this->form_validation->run()==false) {
+            $this->productadded();
+        }else{
+
+            $update=array(
+                'title' => $title,
+                'rating' => $rating,
+                'atoll' => $atoll,
+                'no_of_villas' => $no_of_villas,
+                'duration' => $duration,
+                'airport' => $Airport
+            );
+            $this->db->where('id',$id);
+            $this->db->update('resorts',$update);
+
+            if ($_FILES['userfile']['name'] != '') {
+
+                $this->db->where('id',$id);
+                $query = $this->db->get('resorts');
+                $row = $query->row();
+                $image = $row->userfile;
+                unlink('./web_assets/img/resorts/'.$image);
+
+                $config['upload_path'] = './web_assets/img/resorts/';
+                $config['allowed_types'] = 'jpg|jpeg|png|gif';
+                $config['max_size'] = '200000';
+                $config['max_width'] = '1524000';
+                $config['max_height'] = '1000000';
+
+                $this->load->library('upload', $config);
+                            
+                $upload = $this->upload->do_upload('userfile');
+                
+                if($upload == true){
+                    
+                    $update_img=array(
+                        'userfile' => $_FILES['userfile']['name']
+                    );
+                    $this->db->where('id',$id);
+                    $this->db->update('resorts',$update_img);
+                }
+            }
+
+            redirect('admin/view_resorts');
+
+
+
+        }
+    }
 }
 ?>
