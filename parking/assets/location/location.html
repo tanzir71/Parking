@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<title>Location Tracker</title>
+
+</head>
+<body>
+
+	<div class="jumbotron">
+		<div class="container">
+			
+			<div id="map" style="height: 500px;"></div>
+			
+		</div>
+	</div>
+
+
+
+
+
+	
+
+	<script>
+	  function initMap() {
+	    var uluru = {lat: 22.361507, lng: 91.822773};
+	    var map = new google.maps.Map(document.getElementById('map'), {
+	      zoom: 15,
+	      center: uluru
+	    });
+	    var marker = new google.maps.Marker({
+	      position: uluru,
+	      map: map
+	    });
+	  }
+	</script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKf3D0CKv98W_EGTk5QfKANDh0CZuAlNc&callback=initMap">
+	</script>
+
+
+	
+
+</body>
+</html>
+
+<!-- new API 
+<script>
+  function initMap() {
+    var uluru = {lat: 22.361507, lng: 91.822773};
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 15,
+      center: uluru
+    });
+    var marker = new google.maps.Marker({
+      position: uluru,
+      map: map
+    });
+  }
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKf3D0CKv98W_EGTk5QfKANDh0CZuAlNc&callback=initMap">
+</script>
+ new api end 
+
+function createMarker(place) {
+  var placeLoc = place.geometry.location;
+  var marker = new google.maps.Marker({
+    map: map,
+    icon: place.icon,
+    position: place.geometry.location
+  });
+
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.setContent(place.name);
+    infowindow.open(map, this);
+  });
+}
+
+
+
+
+
+ -->
+ 

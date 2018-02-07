@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Country Limit</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  </head>
+  <body>
+
+      <input id="geocomplete" type="text" placeholder="Type in an address" size="90" />
+
+
+
+    <script src="jquery.geocomplete.js"></script>
+
+    
+<script src="http://maps.googleapis.com/maps/api/js??key=AIzaSyCKf3D0CKv98W_EGTk5QfKANDh0CZuAlNc&amp;libraries=places"></script>
+
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKf3D0CKv98W_EGTk5QfKANDh0CZuAlNc&libraries=places"
+         async defer></script>
+
+-->
+    <script>
+
+      $("#geocomplete").geocomplete({
+       types: ['geocode'],
+       country: 'bd'
+      });
+
+    </script>
+  </body>
+</html>
+
+
+    
+
+<!-- 
+street location : types: ['establishment'],
+state : types: ['geocode'],
+-->

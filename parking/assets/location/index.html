@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+	<title>Location Tracker</title>
+	
+</head>
+<body>
+
+
+
+
+
+
+
+
+
+
+<div class="container" style="padding: 20px;border: 5px solid #eee;border-radius: 5px">
+  <div class="form-inline" role="form" style="margin-bottom:20px;">
+    <div class="form-group">
+      <input type="search"  value="Dhaka" class="form-control" id="from-location" >
+    </div>
+    <div class="form-group" style="display:">
+      <input type="search" id="to-location" class="form-control" value="Gabtoli" placeholder="Chittagong" >
+    </div>
+
+    <div class="form-group">
+      <select id="mode" class="form-control" onchange="initMap()">
+        <option value="DRIVING">Driving</option>
+        <option value="WALKING">Walking</option>
+        <option value="BICYCLING">Bicycling</option>
+      </select>
+    </div>
+
+    <button  class="btn btn-default" id="get-location" onclick="initMap()"><i class="fa fa-map-marker"></i> Click for direction</button>
+  </div>
+  
+  
+  <div class="map2-area" >
+    <div id="map4" class="col-lg-8 col-md-8 col-sm-8 col-xs-12" style="height:400px;background:#fff"></div>
+    <div id="right-panel" class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+      <p>Total Distance: <span id="total"></span></p>
+    </div>
+  </div>
+</div>
+
+
+
+	<!-- Latest compiled and minified CSS & JS -->
+	<link rel="stylesheet" media="screen" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+	<script src="http://code.jquery.com/jquery.js"></script>
+	<script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDMvK4XWOevmeT2gZdws02xaUtYe--UgkU" async defer></script>
+
+
+
+
+<script type="text/javascript">
+
+
+
+	$(document).ready(function(){
+	  $('#direction_map_location i').click(function(event){
+	    var to=(event.target.id);
+	    $('#to-location').val(to);
+	  });
+	});
+
+
+
+    function initMap() {
+          var from=jQuery('#from-location').val();
+          var to=jQuery('#to-location').val();
+          var mode=jQuery('#mode').val();
+          //alert(mode+from+to);
+          //alert('GOT'+from.length);
+
+          var map3 = new google.maps.Map(document.getElementById('map4'), {
+            zoom: 4,
+            center: {lat: 21.405983, lng: 91.989899}  // Chittagong., 
+          });
+
+          var directionsService = new google.maps.DirectionsService;
+          var directionsDisplay = new google.maps.DirectionsRenderer({
+            draggable: true,
+            map: map3,
+            panel: document.getElementById('right-panel')
+          });
+
+          directionsDisplay.addListener('directions_changed', function() {
+            computeTotalDistance(directionsDisplay.getDirections());
+          });
+
+          displayRoute(from, to, directionsService, directionsDisplay,mode);
+
+           google.maps.event.trigger(map3,'resize');
+
+      }
+
+      function displayRoute(origin, destination, service, display,mode) {
+        service.route({
+          origin: origin,
+          destination: destination,
+          waypoints: [/*{location: 'Adelaide, SA'}, {location: 'Broken Hill, NSW'}*/],
+          travelMode: google.maps.TravelMode[mode],
+          avoidTolls: true
+        }, function(response, status) {
+          if (status === google.maps.DirectionsStatus.OK) {
+            display.setDirections(response);
+          } else {
+            alert('Could not display directions due to: ' + status);
+          }
+        });
+      }
+
+
+
+      function computeTotalDistance(result) {
+        var total = 0;
+        var myroute = result.routes[0];
+        for (var i = 0; i < myroute.legs.length; i++) {
+          total += myroute.legs[i].distance.value;
+        }
+        total = total / 1000;
+        document.getElementById('total').innerHTML = total + ' km';
+      }
+
+
+
+
+
+//<![CDATA[
+
+    var customIcons = {
+      general: {
+        icon: 'icon.jpg'
+      }
+    };
+
+
+    function bindInfoWindow(marker, map, infoWindow, html) {
+      google.maps.event.addListener(marker, 'click', function() {
+        infoWindow.setContent(html);
+        infoWindow.open(map, marker);
+      });
+    }
+
+    function downloadUrl(url, callback) {
+      var request = window.ActiveXObject ?
+          new ActiveXObject('Microsoft.XMLHTTP') :
+          new XMLHttpRequest;
+
+      request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+          request.onreadystatechange = doNothing;
+          callback(request, request.status);
+        }
+      };
+
+      request.open('GET.html', url, true);
+      request.send(null);
+    }
+
+    function doNothing() {}
+
+    //]]>
+
+</script>
+</body>
+</html>
