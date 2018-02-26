@@ -1,8 +1,14 @@
 /* Custom CSS */ 
-body{font-family: play !important;}
+body{font-family: 'Quicksand', sans-serif !important;}
 a:hover { text-decoration: none;}
 .admin-logo {margin: -10px 0;}
 .admin-logo img {width: 170px;}
+a {
+  outline: 0 none !important;
+}
+table th, table td{
+  font-size: 12px;
+}
 
 .user_title{
 	

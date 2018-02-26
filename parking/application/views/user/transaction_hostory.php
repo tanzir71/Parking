@@ -3,13 +3,13 @@
 <div class="home-directory">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
 
             	<?php include_once'profile_sidebar.php'; ?>
 
             </div>
 
-            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
             	<div class="panel panel-default">
             		<div class="panel-heading">
             			<h3 class="panel-title"><i class="fa fa-credit-card-alt"></i> Transaction History</h3>

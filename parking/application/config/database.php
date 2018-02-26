@@ -49,9 +49,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';//thirfrnb_sohel
-$db['default']['password'] = '';//dhkctg17
-$db['default']['database'] = 'parking';//thirfrnb_rv
+$db['default']['username'] = 'thirfrnb_parkadmin';//thirfrnb_parkadmin
+$db['default']['password'] = 'goodpark911';//goodpark911
+$db['default']['database'] = 'thirfrnb_betapark';//thirfrnb_betapark
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

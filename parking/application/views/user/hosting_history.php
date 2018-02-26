@@ -3,13 +3,13 @@
 <div class="home-directory">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
 
             	<?php include_once'profile_sidebar.php'; ?>
 
             </div>
 
-            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
             	<div class="panel panel-default">
             		<div class="panel-heading">
             			<h3 class="panel-title"><i class="fa fa-history"></i> Hosting History</h3>
@@ -37,7 +37,7 @@
                                 <tbody>
                                     <?php
                                         foreach ($host_history->result_array() as $value) {
-                                            if ($value['status'] ==1 || $value['status'] ==0) {
+                                            if ($value['status'] == 1 || $value['status'] == 0) {
                                     ?>
                                         <tr id="sohel<?php echo $value['id']; ?>">
                                             <td><?php echo $value['id']; ?></td>
@@ -50,9 +50,12 @@
                                             <td><?php
                                                 if ($value['status']==1) {
                                                     echo '<button class="btn btn-sm btn-success" disabled>Published</button>';
-                                                }else if ($value['status']==0) {
+                                                }else if ($value['status']==0 && $value['reviews']==1) {
                                                     echo '<button class="btn btn-sm btn-warning" disabled>Pending</button>';
+                                                }else if ($value['status']==0 && $value['reviews']==0) {
+                                                    echo '<button class="btn btn-sm btn-warning" disabled>not submitted yet</button>';
                                                 }
+
                                             ?></td>
                                             <td>           
                                                 <?php 
@@ -66,8 +69,6 @@
                                                     }
                                                     $sum_show = $sum/$total_review;
                                                     echo '<span class="badge">'.number_format($sum_show, 1).'/Total: '.$get_reviews->num_rows().'</span>';
-                                                }else{
-                                                    echo 'No';
                                                 }
                                                 ?>
                                             </td>
@@ -87,11 +88,11 @@
                                             </td>
 
                                             <td>
-                                                <button type="button" class="btn btn-danger btn-sm" value="<?php echo $value['id'];  ?>" onclick="return hosting_delete(this)"><i class="fa fa-trash"></i></button>
+                                                <button type="button" class="btn btn-default btn-sm" value="<?php echo $value['id'];  ?>" onclick="return edit_hosting(this)">Edit</button>
                                             </td>
 
                                             <td>
-                                                <button type="button" class="btn btn-default btn-sm" value="<?php echo $value['id'];  ?>" onclick="return edit_hosting(this)">Edit</button>
+                                                <button type="button" class="btn btn-danger btn-sm" value="<?php echo $value['id'];  ?>" onclick="return hosting_delete(this)"><i class="fa fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     <?php }} ?>

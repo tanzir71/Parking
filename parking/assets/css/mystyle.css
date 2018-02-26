@@ -2,7 +2,7 @@
 	padding: 8px 0 8px 20px;
 }
 .listing-info {
-  min-height: 180px;
+  min-height: 110px;
 }
 
 
@@ -113,12 +113,17 @@
   padding: 14px 0px 0;
 }
 .profile_img {
-  height: 180px;
-  text-align: center;
+  border-radius: 100%;
+  display: flex;
+  height: 200px;
+  justify-content: center;
+  margin: auto;
+  overflow: hidden;
+  width: 200px;
 }
 .profile_img > img {
   height: 100%;
-  max-width: 100%;
+  max-width: 1000%;
 }
 .profile_name {
   text-align: center;
@@ -160,6 +165,13 @@
 
 .list-icon.icon_js i{
   color: #505050;
+}
+.list-review-icon > li {
+  float: left;
+  padding: 0 2px;
+}
+.list-review-icon > li > i {
+  color: #c5c6c6;
 }
 
 .map_info_style {
@@ -227,7 +239,7 @@
   line-height: 55px;
   position: absolute;
   text-align: center;
-  top: 50%;
+  top: 46%;
   width: 55px;
   left: 0;
 }
@@ -243,7 +255,7 @@
   position: absolute;
   right: 0;
   text-align: center;
-  top: 50%;
+  top: 46%;
   width: 55px;
 }
 .pad0{
@@ -254,7 +266,7 @@
   width: 100%;
 }
 .table tr, .table td{
-  font-size: 14px;
+  font-size: 12px;
 }
 .parking_capacity {
   color: #6a6a6a;
@@ -373,7 +385,7 @@
   font-size: 11px;
 }
 .li-name {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   margin-bottom: 10px;
 }
@@ -383,8 +395,8 @@
 
 .dph-info h4 {
   font-size: 24px;
+  padding-left: 15px;
 }
-
 .name_dollar {
   background: rgb(251, 136, 76) none repeat scroll 0 0;
   border-radius: 3px;

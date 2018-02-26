@@ -225,6 +225,7 @@ class CI_Router {
 	function _set_request($segments = array())
 	{
 		$segments = $this->_validate_request($segments);
+		$segments = $this->_validate_request(str_replace('-', '_', $segments)); //myceate line
 
 		if (count($segments) == 0)
 		{

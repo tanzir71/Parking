@@ -3,43 +3,43 @@
 		<?php if ($user_data->oauth_provider == 'facebook'){ ?>
 			<img src="<?php echo $user_data->picture_url; ?>" alt="Profile Image">
 		<?php }else{ ?>
-			<img src="<?php echo base_url() ?>assets/images/profile/<?php echo $user_data->images; ?>" alt="Image">
+			<img src="<?php echo base_url() ?>assets/images/profile/<?php echo $user_data->images; ?>" onerror="this.src='<?php echo base_url() ?>assets/images/profile/alt.png';">
 		<?php } ?>
 	</div>
 	<h3 class="profile_name"><?php echo $user_data->fname.' '. $user_data->lname; ?></h3>
-
 	<div class="profile_categories">
 		<h4>Profile</h4>
 		<ul>
+			<?php if($this->session->userdata('airbnb') == 1 || $this->session->userdata('admin_id') == 1){ ?><li><a href="<?php echo base_url() ?>user/all-user"><i class="fa fa-users"></i> All User</a></li><?php } ?>
 			<li><a href="<?php echo base_url() ?>user/profile"><i class="fa fa-user"></i> Profile</a></li>
-			<li><a href="<?php echo base_url() ?>user/update_profile/edit"><i class="fa fa-pencil"></i> Edit Ptofile</a></li>
+			<li><a href="<?php echo base_url() ?>user/update-profile/edit"><i class="fa fa-pencil"></i> Edit Ptofile</a></li>
 			<?php if (empty($user_data->oauth_provider)){ ?>
-			<li><a href="<?php echo base_url() ?>user/update_profile/password"><i class="fa fa-key"></i> Change Password</a></li>
-			<li><a href="<?php echo base_url() ?>user/update_profile/picture"><i class="fa fa-users"></i> Profile Picture</a></li>
+			<li><a href="<?php echo base_url() ?>user/update-profile/password"><i class="fa fa-key"></i> Change Password</a></li>
+			<li><a href="<?php echo base_url() ?>user/update-profile/picture"><i class="fa fa-users"></i> Profile Picture</a></li>
 			<?php } ?>
 		</ul>
 
 		<h4>Hosting Information</h4>
 		<ul>
-			<li><a href="<?php echo base_url() ?>user/become_a_host"><i class="fa fa-list-ol"></i> Add new place</a></li>
-			<li><a href="<?php echo base_url() ?>user/hosting_history"><i class="fa fa-history"></i> Hosting History</a></li>
+			<li><a href="<?php echo base_url() ?>user/become-a-host"><i class="fa fa-list-ol"></i> Add new place</a></li>
+			<li><a href="<?php echo base_url() ?>user/hosting-history"><i class="fa fa-history"></i> Hosting History</a></li>
 		</ul>
 
 		<h4>Booking list</h4>
 		<ul>
-			<li><a href="<?php echo base_url() ?>user/active_booking"><i class="fa fa-product-hunt"></i> Active booking</a></li>
-			<li><a href="<?php echo base_url() ?>user/booking_history"><i class="fa fa-history"></i> Booking history</a></li>
+			<li><a href="<?php echo base_url() ?>user/active-booking"><i class="fa fa-product-hunt"></i> Active booking</a></li>
+			<li><a href="<?php echo base_url() ?>user/booking-history"><i class="fa fa-history"></i> Booking history</a></li>
 		</ul>
-
+<!--
 		<h4>Messaging</h4>
 		<ul>
-			<li><a href="<?php echo base_url() ?>user/chat_list"><i class="fa fa-envelope"></i> Inbox</a></li>
+			<li><a href="user/chat_list"><i class="fa fa-envelope"></i> Inbox</a></li>
 		</ul>	
-
+-->
 		<h4>Transaction</h4>
 		<ul>
 			<li><a href="<?php echo base_url() ?>user/payment"><i class="fa fa-credit-card-alt"></i> Payment</a></li>
-			<li><a href="<?php echo base_url() ?>user/transaction_hostory"><i class="fa fa-history"></i> Transaction History</a></li>
+			<li><a href="<?php echo base_url() ?>user/transaction-history"><i class="fa fa-history"></i> Transaction History</a></li>
 		</ul>
 <!--
 		<h4>Parking List</h4>

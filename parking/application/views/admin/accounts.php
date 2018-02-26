@@ -94,7 +94,7 @@
 															<th>#</th>
 															<th>Buyer</th>
 															<th>Vendor</th>
-															<th>Status</th>
+															<th>Pay method</th>
 															<th class="text-right">Amount:</th>
 														</thead>
 														<tbody>
@@ -122,14 +122,13 @@
 																	$u_q_wor = $u_query->row();
 																	?>
 																		<td><?php echo $u_q_wor->fname; ?> <?php echo $u_q_wor->lname; ?></td>
-
-
+																		
 																		<td>
 																			<?php 
 																				if ($value['payment_status']=='success') {
-																					echo 'Active';
-																				}else{
-																					echo "Passed";
+																					echo 'Credit Cart';
+																				}else if ($value['payment_status'] == 'hand cash') {
+																					echo "Hand Cash";
 																				}
 																			?>
 																		</td>

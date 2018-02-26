@@ -13,8 +13,7 @@ class Member extends CI_Controller {
 
 	
 	
-	function adminlogin1()
-	{
+	function adminlogin1(){
 		error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
 		$this->load->helper('form');
 		$this->load->library('form_validation');      
@@ -24,8 +23,7 @@ class Member extends CI_Controller {
 		{
 			redirect('home');
 		}
-		else
-		{
+		else{
 			$this->load->database();			
 				
 			$data = array(
@@ -34,35 +32,28 @@ class Member extends CI_Controller {
 			);
 	
 			$this->db->where('user', $data['name']);
+			$this->db->where('status', 1); //IF 1 = ACTIVE, 2 = INACTIVE;
 			$query = $this->db->get("alluser");
 			$row = $query->row();
-	
-	
+
 	 		if($row->password == $data['pass'])
 			{
 				$this->session->set_userdata('airbnb', $row->id);
-				
+
 				session_start();
 				$session_id = session_id( );
 				
 				$da=array(
 					"session" => $session_id
-				);
-										
-				
+				);				
 				$this->db->where('id',$row->id);
 				$this->db->update('alluser',$da);
-
 				$this->session->set_userdata('web_session', $session_id);
 				$this->session->set_userdata('user', 'user');
 
 				redirect('user');
-			
 			}
-
-
 			else{
-
 				redirect('home');
 			} 
 		}

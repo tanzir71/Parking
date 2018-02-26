@@ -20,17 +20,25 @@ class Home extends CI_Controller{
 	}
 	public function index(){
 		$data['authUrl'] =  $this->facebook->login_url();
-		$data['title'] = 'Parking | On-demand parking for your RV.';
+		$data['title'] = 'Parking';
 		$this->load->view('main/header',$data);
 		$this->load->view('main/home');
 		$this->load->view('main/footer');		 
 	}
 	public function find_parking(){
 		$data['authUrl'] =  $this->facebook->login_url();
-		$data['title'] = 'Find Parking | On-demand parking for your RV.';
+		$data['title'] = 'Find Parking';
 		$this->load->view('main/header',$data);
 
 		$this->load->view('main/index');
+		$this->load->view('main/footer');		 
+	}
+	public function how_it_works(){
+		$data['authUrl'] =  $this->facebook->login_url();
+		$data['title'] = 'How it works';
+		$this->load->view('main/header',$data);
+
+		$this->load->view('main/how_it_works');
 		$this->load->view('main/footer');		 
 	}
 	public function location_data(){
@@ -41,10 +49,13 @@ class Home extends CI_Controller{
 		$result['final'] = $this->user_model->anyQueryApply($location,$from_date);
 		echo json_encode($result);
 	}
+	public function find_disallow_location_result(){
+		$result['final'] = $this->user_model->find_disallow_location_result();
+		echo json_encode($result);
+	}
 	public function location_data_current(){
-		$lat = $this->input->post('lat');
-		$lng = $this->input->post('lng');
-		$result['final'] = $this->user_model->location_data_current($lat,$lng);
+		$city_name = $this->input->post('city_name');
+		$result['final'] = $this->user_model->location_data_current($city_name);
 		echo json_encode($result);
 	}
 
@@ -86,8 +97,6 @@ class Home extends CI_Controller{
 
 
 	public function host_rv($id, $title){
-		//$sender = $this->session->userdata('airbnb');
-
 		$title = $this->user_model->title_apply($id);
 
 		$data['authUrl'] =  $this->facebook->login_url();

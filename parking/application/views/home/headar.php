@@ -14,7 +14,7 @@
 
     <!-- Google fonts - witch you want to use - (rest you can just remove) -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
-    <link href="https://fonts.googleapis.com/css?family=Play" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Quicksand:300,400,500,700" rel="stylesheet">
 
     <!-- Custom Style CSS -->
     <link rel="stylesheet" href="<?php echo base_url(); ?>panel/css/style.css">
@@ -103,7 +103,7 @@
                         <i class="fa fa-user fa-fw"></i> <?php echo 'Profile'; ?>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="<?php echo base_url(); ?>admin/change_password"><i class="fa fa-lock"></i> Change password</a>
+                        <li><a href="<?php echo base_url(); ?>admin/change-password"><i class="fa fa-lock"></i> Change password</a>
                         </li>
                         <li><a href="<?php echo base_url(); ?>admin/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>

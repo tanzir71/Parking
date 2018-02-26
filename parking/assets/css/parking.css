@@ -3,46 +3,53 @@
 =========================
 */
 .intro-search a {
-  background: #fa824c none repeat scroll 0 0;
-  border: medium none;
-  border-radius: 3px;
+  background: #FA824C none repeat scroll 0 0;
+  border: 2px solid #FA824C;
+  border-radius: 5px;
   color: #ffffff;
   font-size: 16px;
-  height: 62px;
-  line-height: 62px;
-  margin-left: 6px;
-  padding: 0 53px;
-  text-align: left;
-  width: 198px;
+  height: 55px;
   margin-bottom: 10px;
+  margin-left: 6px;
+  padding: 15px 0;
+  text-align: center;
+  transition: all 0.4s ease 0s;
+  width: 190px;
 }
 .intro-search a:hover {
-  background: #dd652f none repeat scroll 0 0;
+  background: transparent;
+  border: 2px solid #FA824C;
 }
 .btn-white {
   background: #ffffff none repeat scroll 0 0 !important;
   color: #333333 !important;
+  border: 2px solid #fff !important;
 }
 .btn-white:hover {
-  background: #ddd none repeat scroll 0 0;
+  background: transparent !important;
+  border: 2px solid #FA824C !important;
+  color: #ffffff !important;
 }
 
 
 /* STYLE CSS */
 .steps-section {
   background: #eeeeee none repeat scroll 0 0;
-  padding: 5px 0;
+  padding: 10px 0;
 }
 .steps-header{}
 .steps-header>h3{}
 
 .steps-section-2 {
+  font-family: "Source Sans Pro",sans-serif;
   padding: 30px 0;
 }
-
-.steps-list{}
+.steps-list {
+  margin: 40px 0 30px;
+}
 .steps-list > h4 {
   font-weight: bolder;
+  text-transform: uppercase;
 }
 .steps-list>ul{}
 .steps-list > ul > li {
@@ -56,101 +63,115 @@
 }
 
 
-.content-part {
-  background: #eeeeee none repeat scroll 0 0;
-  padding: 30px 0;
+.bg-dr-blue-2 {
+  background: #FA824C none repeat scroll 0 0;
 }
-
-.featured-logo-section {
-  padding: 30px 0;
+.padd-second-title {
+  padding-bottom: 65px;
+  padding-top: 110px;
 }
-.logo-header-text {
-  font-weight: bolder;
-  margin: 14px 0 5px;
-  text-align: right;
+.icon-block {
+  text-align: center;
+}
+.icon-block .icon-img {
+  margin-bottom: 23px;
+}
+.icon-block .icon-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 20px;
+  margin-bottom: 10px;
   text-transform: uppercase;
 }
-.featured-logo {
-  display: flex;
-  height: 40px;
-  justify-content: center;
+.color-white {
+  color: #ffffff;
 }
-.featured-logo>img {
-  height: 100%;
-  width: auto;
+.icon-block .icon-text {
+  font-family: "Source Sans Pro",sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  margin-bottom: 20px;
 }
-.contant-description{}
-.video-placeholder {
-  background: #a8a9aa url("../images/video-holder-compressed.jpg") no-repeat scroll center center / cover ;
-  border-radius: 15px;
-  height: 354px;
-  margin: 0 auto;
-  max-height: 354px;
-  max-width: 640px;
-  position: relative;
-  width: 100%;
-}
-.play-button {
-  cursor: pointer;
-  height: 100px;
-  left: 50%;
+
+
+
+
+.space-parking-section {
   overflow: hidden;
+}
+.inner-banner.style-5 {
+  min-height: 430px;
+}
+.inner-banner {
+  min-height: 380px;
+  position: relative;
+  text-align: center;
+}
+.background-block {
+  background-position: center center;
+  background-size: cover;
+}
+.vertical-align {
+  left: 0;
   position: absolute;
   top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100px;
+  transform: translateY(-50%);
+  width: 100%;
 }
-.play-button::after {
-  background: #fa824c none repeat scroll 0 0;
-  border-radius: 50%;
-  color: #ffffff;
-  content: "";
-  display: inline-block;
-  font-family: "FontAwesome";
-  font-size: 50px;
-  height: 10rem;
-  line-height: 10rem;
-  text-align: center;
-  text-indent: 1.5rem;
-  width: 10rem;
-  z-index: 100;
+.vertical-align h3 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  line-height: 30px;
+  text-transform: uppercase;
 }
-.play-button:hover::after {
-  background-color: #df582e;
+.inner-banner h2 {
+  font-size: 38px;
+  letter-spacing: 7.5px;
+  line-height: 40px;
+  margin-bottom: 20px;
 }
 
-
-
-
-
-.parking-apps-content {
-  background: rgba(0, 0, 0, 0) url("../images/apps-bg.jpg") no-repeat fixed center center / cover ;
+.c-button.bg-dr-blue-2 {
+  border: 2px solid #FA824C;
+  color: #fff;
 }
-.parking-apps-for-bg {
-  background: rgba(0, 0, 0, 0.6) none repeat scroll 0 0;
-  padding: 50px 0 0;
-}
-
-.apps-inage{}
-.apps-inage>img{
-  height: 380px;
-}
-.apps-content {
-  padding: 70px 0;
-}
-.apps-content > h3 {
-  color: #ffffff;
-}
-.apps-content > p {
-  color: #dddddd;
-  margin-bottom: 5px;
-}
-.apps-content > a {
-  display: inline-block;
+.c-button.b-40 {
+  font-size: 10px;
   height: 40px;
-  margin-right: 3px;
-  width: 130px;
+  line-height: 36px;
+  padding: 0 18px;
 }
+.c-button {
+  border-radius: 5px;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 14px;
+  padding: 16px 20px;
+  position: relative;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+.c-button.hv-dr-blue-2-o:hover {
+  border: 2px solid #FA824C;
+  color: #FA824C;
+  background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+  text-decoration: none;
+}
+
+
+
+
+
+
+
+
+
+
+
 /* ====================
 //	HOME PAGE STYLE END
 =======================
@@ -162,9 +183,6 @@
 //	FIND PARKING STYLE START
 ============================
 */
-.navbar-section {
-  margin-top: 110px;
-}
 
 .find-park-nav {
   border: medium none;
@@ -190,14 +208,274 @@
 
 
 
-
-
-
-#ui-datepicker-div{
-	top: 55px  !important;
+.listing-img {
+  height: 80px;
+  margin: 10px 5px;
+  position: relative;
+  background-size: cover !important;
+}
+.listing-info h4 {
+  cursor: auto;
 }
 
 
+
+
+/*****************************************************
+*** FOOTER ***
+*****************************************************/
+
+footer {
+  overflow: hidden;
+  padding-top: 70px;
+  position: relative;
+  width: 100%;
+}
+.bg-dark.type-2 {
+  background: #393f46 none repeat scroll 0 0;
+  color: #ffffff;
+}
+.pac-logo::after {
+  background-image: url("https://maps.gstatic.com/mapfiles/api-3/images/powered-by-google-on-white3.png");
+  background-position: right center;
+  background-repeat: no-repeat;
+  background-size: 120px 14px;
+  content: "";
+  display: block;
+  height: 16px;
+  padding: 1px 1px 1px 0;
+  text-align: right;
+}
+.pac-container {
+  background-color: #ffffff;
+  border-radius: 2px;
+  border-top: 1px solid #d9d9d9;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  font-family: Arial,sans-serif;
+  overflow: hidden;
+  position: absolute;
+  z-index: 1000;
+}
+.bg-dark.type-2 .footer-block::before {
+  display: none;
+}
+.footer-block::before {
+  background: #383838 none repeat scroll 0 0;
+  content: "";
+  height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 1px;
+}
+.bg-dark.type-2 .footer-block {
+  padding: 0;
+}
+.footer-block {
+  float: left;
+  margin-bottom: 50px;
+  padding-left: 15px;
+  padding-right: 15px;
+  position: relative;
+  width: 100%;
+}
+.footer-block a{
+  color: #FA824C;
+}
+.bg-dark.type-2 .logo-footer {
+  margin-bottom: 30px;
+}
+.logo-footer {
+  margin-top: -7px;
+}
+.bg-dark.type-2 .f_text {
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 24px;
+  padding-bottom: 55px;
+}
+.f_text {
+  font-family: "Source Sans Pro",sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 22px;
+}
+footer a, footer a:link, footer a:visited, footer a:active {
+  cursor: pointer;
+  outline: medium none;
+  text-decoration: none;
+}
+footer a:focus, footer a:hover {
+  color: inherit;
+}
+a, .c-button, .investor-logo img, .filter-nav a::before, .photo-next, .photo-prev, .contry-item h5, .slider-wth-thumbs.style-1 .thumbnails img {
+  transition: all 0.35s ease-in-out 0s;
+}
+footer.type-2 .footer-block h6 {
+  color: #ffffff;
+  margin-top: 0;
+  padding-bottom: 24px;
+}
+.contact-info {
+  margin-bottom: 47px;
+}
+.contact-info .contact-line {
+  font-family: "Source Sans Pro",sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 18px;
+  margin-bottom: 33px;
+}
+.bg-dark.type-2 .contact-info span, .bg-dark.type-2 .contact-info a {
+  font-weight: 400;
+}
+footer h6 {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+.bg-dark.type-2 .contact-info i {
+  color: #FA824C;
+  display: inline-block;
+  margin-right: 10px;
+}
+.footer-share a {
+  color: #ffffff;
+  float: left;
+  font-size: 22px;
+  margin: 0 20px 0 0;
+  position: relative;
+  transition: 0.4s;
+}
+
+.footer-share a:hover {
+  color: #FA824C;
+}
+/*End Footer*/
+
+
+
+.cta-btn:hover {
+  background: #ffffff none repeat scroll 0 0;
+  color: #fa824c;
+  text-decoration: none;
+}
+
+
+/*PARKING*/
+
+.btn.btn-book-now {
+  background: #57b9b6 none repeat scroll 0 0;
+  color: #ffffff;
+  margin-top: 5px;
+}
+#filterig_result{
+}
+.btn{
+  padding-bottom: 3px;
+}
+
+.pay-tab {
+  border: 1px solid #eeeeee;
+  display: block;
+  overflow: hidden;
+}
+.pay-tab-nav > li.active > a, .pay-tab-nav > li.active > a:focus{
+  background: #fa824c;
+  color: #fff;
+}
+.pay-tab-nav > li > a, .pay-tab-nav > li > a:hover {
+  background-color: #ddd;
+  color: #333;
+}
+.navbar-inverse {
+  background-color: #393f46;
+}
+#search_map {
+  background: rgba(0, 0, 0, 0.23) none repeat scroll 0 0;
+  border: 2px solid #f7804b;
+  color: #ffffff;
+  width: 50%;
+}
+
+
+/*pagination css*/
+.pagi{
+  text-align: right;
+}
+.pagi-item {
+  border: medium none;
+  display: inline-block;
+  margin: 0 5px;
+  padding: 0;
+}
+.pagi-item > button {
+  padding: 5px 10px 3px;
+}
+
+img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png"] {
+    display: none;
+}
+#current_location {
+  border: 2px solid #ddd;
+  margin: 0 0 10px;
+  padding: 5px 10px;
+  background: #fff;
+  color: #C9511B;
+  font-weight: bolder;
+}
+
+/* ##HOW IT WORKS## */
+.how-header {
+  background: rgba(0, 0, 0, 0) url("../images/how-it-works-header.jpg") repeat scroll 0 0;
+  margin-top: 110px;
+}
+.container2 {
+  max-width: 800px;
+}
+.howitworks-motto {
+  color: #ffffff;
+  padding: 80px 0;
+  text-align: center;
+}
+
+
+.howItWorksSteps {
+  padding: 40px 0;
+}
+.vcenter {
+  display: inline-block;
+  float: none;
+  vertical-align: middle;
+}
+.howto-steps {
+  border-radius: 5px;
+  padding: 15px;
+  text-align: center;
+}
+
+.how-footer {
+  background-color: #f1f1e9;
+  padding: 30px 0;
+  text-align: center;
+}
+.form-control, select, input {
+  padding: 0 15px;
+}
+
+
+
+
+.pagination {
+  border-radius: 4px;
+  display: inline-block;
+  float: right;
+  margin: 20px 0 0;
+  padding-left: 0;
+}
 
 
 

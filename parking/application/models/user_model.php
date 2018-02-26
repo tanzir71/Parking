@@ -47,28 +47,39 @@ class User_Model extends CI_Model{
 
     //my web application model database query start
 
-    
+    public function admin_search_user($user_mail){
+
+        $this->db->like('email',$user_mail);
+        $this->db->order_by('id','desc');
+        $query = $this->db->get("alluser");
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+
 	public function anyQueryApply($location,$from_date){
 
-        $this->db->join('host', 'files.hostid = host.id', 'left');
-
 		if(!empty($location)){
-            $this->db->like('host.city',$location);
+            $this->db->like('city',$location);
         }
 
 
         if(!empty($from_date)){
-            $this->db->where('host.to_date >=', $from_date);
-            $this->db->where('host.from_date <=', $from_date);
+            $this->db->where('to_date >=', $from_date);
+            $this->db->where('from_date <=', $from_date);
         }
 
-        $this->db->where('host.reviews',1);
-        $this->db->where('host.status',1);
+        $this->db->where('reviews',1);
+        $this->db->where('status',1);
+        $this->db->order_by('id','desc');
 
-        $this->db->limit(6);
+        $this->db->limit(20);
 
-        $this->db->group_by('files.hostid', 'desc');
-		$query = $this->db->get("files");
+		$query = $this->db->get("host");
 
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
@@ -78,21 +89,31 @@ class User_Model extends CI_Model{
         }
         return false;
 	}
-    public function location_data_current($lat,$lng){
+    public function find_disallow_location_result(){
 
-        $this->db->join('host', 'files.hostid = host.id', 'left');        
+        $this->db->where('reviews',1);
+        $this->db->where('status',1);
+        $this->db->order_by('id','desc');
+        $this->db->limit(20);
+        $query = $this->db->get("host");
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
+    public function location_data_current($city_name){        
 
-        $this->db->like('host.lat',$lat);
-        $this->db->like('host.lng',$lng);
+        $this->db->like('city',$city_name);
+        $this->db->where('reviews',1);
+        $this->db->where('status',1);
+        $this->db->order_by('id','desc');
 
+        $this->db->limit(20);
 
-        $this->db->where('host.reviews',1);
-        $this->db->where('host.status',1);
-
-        $this->db->limit(6);
-
-        $this->db->group_by('files.hostid', 'desc');
-        $query = $this->db->get("files");
+        $query = $this->db->get("host");
 
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
@@ -138,28 +159,35 @@ class User_Model extends CI_Model{
 
 
     public function host_history($id){
-        $this->db->where('reviews', '1');
+        $this->db->where("(reviews='0' OR reviews='1')");
         $this->db->where('userid', $id);
         $this->db->order_by('id', 'desc');
         $query = $this->db->get("host");
         return $query;
     }
+    
 
-
-    public function host_data_check($user_id,$user_session){
+    public function host_data_check($host_id,$user_id,$user_session){
+        if(!empty($host_id)){
+            $this->db->where('id',$host_id);
+        }
         $this->db->where('userid', $user_id);
         $this->db->where('session', $user_session);
         $this->db->where('reviews', 0);
-        $this->db->order_by('id', 'desc');
-        $this->db->limit(1);
+
+        if(empty($host_id)){
+            $this->db->order_by('id', 'desc');
+            $this->db->limit(1);
+        }
+
         $query = $this->db->get("host");
 
         if ($query->num_rows() > 0) {
             $row = $query->row();
             return $row;
         }
-        return false;
-    }
+        return FALSE;
+    } //MOST IMPORTNAT QUERY
     
     
     public function insert($data = array()){
@@ -197,8 +225,8 @@ class User_Model extends CI_Model{
     }
 
     public function host_approval(){
-        $this->db->where('status', 1);
-        $this->db->where('reviews', 0);
+        $this->db->where('status', 0);
+        $this->db->where('reviews', 1);
         $this->db->order_by('id', 'desc');
         $query = $this->db->get("host");
         return $query;

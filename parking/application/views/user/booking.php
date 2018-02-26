@@ -7,12 +7,13 @@
 <p>
 	<?php 
 		//$conv_t = strtotime($to_date)-strtotime($from_date);
-		//echo date("Y-m-d", $conv_t)
-		$date1=date_create($from_date);
-		$date2=date_create($to_date);
+		//echo date("Y-m-d", $conv_t);
 
+		/*$date1=date_create($from_date);
+		$date2=date_create($to_date);
 		$diff=date_diff($date1,$date2);
-		$total_day = $diff->format("%a");
+		$total_day = $diff->format("%a");*/
+
 		//echo $diff->format("%R%a days");
 	?>
 </p>
@@ -31,47 +32,77 @@
 									if ($query_m_id->num_rows()>0) {
 										$query_row = $query_m_id->row();
 										echo $query_row->fname.' '.$query_row->lname;
+
+										if ($query_row->fname == '') {
+											echo $query_row->user;
+										}
 									}
 								?>
 							</p>
 							<div class="panel panel-default">
 								<div class="panel-body">
-									<form  action="/your-charge-code" method="POST" id="payment-form" role="form">
-										<legend>Payment method</legend>
-										<span class="payment-errors"></span>
+									<legend>Payment method</legend>
+
+									<div role="tabpanel">
+										<!-- Nav tabs -->
+										<ul class="nav nav-tabs pay-tab-nav" role="tablist">
+											<li role="presentation" class="active">
+												<a href="#home" aria-controls="home" role="tab" data-toggle="tab">Credit Cart</a>
+											</li>
+											<li role="presentation">
+												<a href="#tab" aria-controls="tab" role="tab" data-toggle="tab">Cash</a>
+											</li>
+										</ul>
 									
-										<div class="form-group col-sm-12 col-xs-12">
-											<label for="">Card number</label>
-											<input type="hidden" id="hostid" value="<?php echo $hostid; ?>">
-											<input type="hidden" id="m_id" value="<?php echo $m_id; ?>">
-											<input type="hidden" id="from_date" value="<?php echo $from_date; ?>">
-											<input type="hidden" id="to_date" value="<?php echo $to_date; ?>">
+										<!-- Tab panes -->
+										<div class="tab-content pay-tab">
+											<div role="tabpanel" class="tab-pane active" id="home">
 
-											<input type="text" size="20" id="card_number" class="form-control" data-stripe="number" required>
+												<form  action="/your-charge-code" method="POST" id="payment-form" role="form">
+													<span class="payment-errors"></span>
+													<div class="form-group col-sm-12 col-xs-12">
+														<label for="">Card number</label>
+														<input type="hidden" id="hostid" value="<?php echo $hostid; ?>">
+														<input type="hidden" id="m_id" value="<?php echo $m_id; ?>">
+														<input type="hidden" id="from_date" value="<?php echo $from_date; ?>">
+														<input type="hidden" id="to_date" value="<?php echo $to_date; ?>">
+
+														<input type="text" size="20" id="card_number" class="form-control" data-stripe="number" required>
+													</div>
+
+													<div class="form-row form-group col-sm-4 col-xs-12">
+														<label for="">Expiration (MM/YY)</label>
+														<input type="text" size="2" class="form-control" id="ex_mm" data-stripe="exp_month" placeholder="MM" required>
+													</div>
+													<div class="form-row form-group col-sm-4 col-xs-12">
+														<input type="text" size="2" class="form-control" id="ex_yy" style="margin-top: 32px" data-stripe="exp_year" placeholder="YY" required>
+													</div>
+
+													<div class="form-group col-sm-4 col-xs-12">
+														<label for="">CVC</label>
+														<input type="text" size="4" class="form-control" id="cvc" data-stripe="cvc" required>
+													</div>
+
+													<div class="form-group col-sm-6 col-xs-12">
+														<label for="">Billing Zip</label>
+														<input type="text" size="6" class="form-control" id="zip" data-stripe="address_zip" required>
+													</div>
+													<div class="form-group col-sm-12 col-xs-12">
+														<input type="submit" class="submit btn btn-default" value="Confirm booking">
+													</div>
+												</form>
+											</div>
+
+
+											<div role="tabpanel" class="tab-pane" id="tab">
+												<h4>Confirm to cash payment.</h4>
+												<button class="btn btn-default" value="" onclick="handCash_booking();">Confirm</button>
+											</div>
+
 										</div>
 
-										<div class="form-row form-group col-sm-4 col-xs-12">
-											<label for="">Expiration (MM/YY)</label>
-											<input type="text" size="2" class="form-control" id="ex_mm" data-stripe="exp_month" placeholder="MM" required>
-										</div>
-										<div class="form-row form-group col-sm-4 col-xs-12">
-											<input type="text" size="2" class="form-control" id="ex_yy" style="margin-top: 32px" data-stripe="exp_year" placeholder="YY" required>
-										</div>
-
-										<div class="form-group col-sm-4 col-xs-12">
-											<label for="">CVC</label>
-											<input type="text" size="4" class="form-control" id="cvc" data-stripe="cvc" required>
-										</div>
-
-										<div class="form-group col-sm-6 col-xs-12">
-											<label for="">Billing Zip</label>
-											<input type="text" size="6" class="form-control" id="zip" data-stripe="address_zip" required>
-										</div>
-										<div class="form-group col-sm-12 col-xs-12">
-											<input type="submit" class="submit btn btn-default" value="Confirm booking">
-										</div>
+									</div>
 										
-									</form>
 								</div>
 							</div>
 						</div>
@@ -93,7 +124,7 @@
 										$query_h_id = $this->user_model->get_booking_user($query_host->userid,'alluser');
 										if ($query_h_id->num_rows()>0) {
 											$query_host_user = $query_h_id->row();
-											echo $query_host_user->fname.' '.$query_host_user->lname;
+											echo 'Owner: '.$query_host_user->fname.' '.$query_host_user->lname;
 										}
 								?>
 							</p>
@@ -111,9 +142,30 @@
 									<h4><?php echo $query_host->title; ?></h4>
 									<ul class="list-group">
 										<li class="list-group-item">Amount: <i class="fa fa-usd"></i><?php echo $query_host->amount; ?> x <?php echo $total_day; ?> = <i class="fa fa-usd"></i><?php echo $total_amount = $query_host->amount*$total_day; ?></li>
-										<li class="list-group-item">Location: <?php echo $query_host->location; ?></li>
-										<li class="list-group-item">RV Types: Up to <u><?php echo $query_host->rv_sizes; ?></u> feet long.</li>
-										<li class="list-group-item">RV Sizes: <?php echo $query_host->rv_types; ?></li>
+										<li class="list-group-item">Location: <?php echo $query_host->location; ?></li>										
+										<li class="list-group-item">
+											<?php
+											$exp = explode(", ", $query_host->rv_types);
+											$count = count($exp);											
+											?>
+											Vehicles Types: <select id="rv_types">
+												<option disabled="1" selected="1">Select Types</option>
+												<?php if ($count==1) { ?>
+													<option value="<?php echo $exp[0]; ?>"><?php echo $exp[0]; ?></option>
+												<?php } ?>
+												<?php if ($count==2) { ?>
+													<option value="<?php echo $exp[0]; ?>"><?php echo $exp[0]; ?></option>
+													<option value="<?php echo $exp[1]; ?>"><?php echo $exp[1]; ?></option>
+												<?php } ?>
+												<?php if ($count==3) { ?>
+													<option value="<?php echo $exp[0]; ?>"><?php echo $exp[0]; ?></option>
+													<option value="<?php echo $exp[1]; ?>"><?php echo $exp[1]; ?></option>
+													<option value="<?php echo $exp[2]; ?>"><?php echo $exp[2]; ?></option>
+												<?php } ?>
+											</select>
+										</li>
+
+										<li class="list-group-item">Number of spaces: Up to <u><?php echo $query_host->rv_sizes; ?></u> feet long.</li>
 										<li class="list-group-item">Selected date: <?php echo $from_date; ?> to <?php echo $to_date; ?></li>
 									</ul>
 								</div>
@@ -157,6 +209,7 @@
 		 	var m_id = $("#m_id").val().trim();
 		 	var from_date = $("#from_date").val().trim();
 		 	var to_date = $("#to_date").val().trim();
+		 	var rv_types = $("#rv_types").val().trim();
 
 		 	var card_number = $("#card_number").val().trim();
 		 	var ex_mm = $("#ex_mm").val().trim();
@@ -166,7 +219,7 @@
 
 			$.ajax({
 				url: '<?php echo base_url('payment/process');?>',
-				data: {access_token: response.id,hostid:hostid,m_id:m_id,from_date:from_date,to_date:to_date,card_number:card_number,ex_mm:ex_mm,ex_yy:ex_yy,zip:zip,cvc:cvc},
+				data: {access_token: response.id,hostid:hostid,m_id:m_id,from_date:from_date,to_date:to_date,card_number:card_number,ex_mm:ex_mm,ex_yy:ex_yy,zip:zip,cvc:cvc,rv_types:rv_types},
 				type: 'POST',
 				dataType: 'JSON',
 				success: function(response){

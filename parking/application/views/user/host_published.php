@@ -7,7 +7,7 @@
                 <h1>
                     <?php
                     if (isset($error)) {
-                        echo '<span style="color:red">'.$error.'</span><br><br><a href="'.base_url().'user/become_a_host_review" class="btn btn-lg btn-default">Back</a>';
+                        echo '<span style="color:red">'.$error.'</span><br><br><a href="'.base_url().'user/hosting-history" class="btn btn-lg btn-default">Back</a>';
                     }else{
                         echo '<span style="color:#81B441">'.$success.'</span>';
                     }

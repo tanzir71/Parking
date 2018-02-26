@@ -12,7 +12,6 @@
     <!-- BOOTSTRAP -->
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <!-- ICONS -->
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/icons/fontawesome/css/style.css">
     <!-- THEME / PLUGIN CSS -->
@@ -25,7 +24,8 @@
     <link rel="stylesheet" href="<?php echo base_url() ?>assets/css/parking.css">
 
     
-    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -45,17 +45,32 @@
             <nav class="navbar-default navbar-fixed-top">
                 <div class="container">
                     <a href="<?php echo base_url() ?>home" class="nav-trigger hidden-xs" data-toggle="modal" data-target="#myModal"></a>
-                    <div class="navbar-header"> <a href="<?php echo base_url() ?>home" class="navbar-brand">air<span>rv</span></a> </div>
+
+                    <div class="navbar-header"> 
+                        <a href="<?php echo base_url() ?>home" class="navbar-brand">
+                            <img src="<?php echo base_url(); ?>assets/images/logo_parkingbee.png" alt="Logo" class="logo-header">
+                        </a> 
+                    </div>
+
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li> <a href="<?php echo base_url(); ?>home">Home</a></li>
-                            <li> <a href="#">How It Works</a></li>
-                            <li> <a href="<?php echo base_url(); ?>home/find_parking">Find Parking</a></li>
-                            <li><a href="#">FAQ</a></li>
+                            <li class="hidden-sm"><a href="<?php echo base_url(); ?>home">Home</a></li>
+                            <li><a href="<?php echo base_url(); ?>home/find-parking">Find Parking</a></li>
+                            <li><a href="<?php echo base_url(); ?>home/how-it-works">How It Works</a></li>
+
+                            <?php 
+                            if ($this->session->userdata('airbnb') && $this->session->userdata('web_session') && $this->session->userdata('user')) { ?>
+                                <li class="hidden-lg hidden-md hidden-sm"><a href="<?php echo base_url(); ?>user/profile">Profile</a></li>
+                                <li class="hidden-lg hidden-md hidden-sm"><a href="<?php echo base_url(); ?>user/logout">Logout</a></li>
+                            <?php }else{ ?>
+                                <li class="hidden-lg hidden-md hidden-sm"><a href="#" data-toggle="modal" data-target="#sign_up" data-tab="login">Sign Up</a></li>
+                                <li class="hidden-lg hidden-md hidden-sm"><a href="#" data-toggle="modal" data-target="#login_model" data-tab="login">Sign In</a></li>
+                            <?php } ?>
+
                         </ul>
                     </div>
-                    <div class="header-widget pull-right">
+                    <div class="header-widget pull-right hidden-xs">
                         
                         <?php 
                         if ($this->session->userdata('airbnb') && $this->session->userdata('web_session') && $this->session->userdata('user')) { ?>

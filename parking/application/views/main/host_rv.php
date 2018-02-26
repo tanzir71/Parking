@@ -1,4 +1,3 @@
-<link rel="stylesheet" type="text/css" href="<?php echo base_url() ?>assets/css/owl.carousel.css">
 <?php 
     $this->db->where('id',$id);
     $query_main_data = $this->db->get("host");
@@ -11,44 +10,12 @@
             if ($get_user_data->num_rows()>0) {
                 $user_data = $get_user_data->row();
 
-
-                $get_image = $this->user_model->get_host_by_data($value->id,$value->userid,'files');
-                    if ($get_image->num_rows() > 0) {  
+ 
 ?>
-<div class="page_header page_height"> 
-
-    <img src="<?php echo base_url() ?>assets/images/hd_banner.jpg" class="img-responsive" alt="">
-    <div class="container">
-        <ul class="bcrumbs">
-            <li><a href="<?php echo base_url() ?>home">Home</a> </li>
-            <li><?php echo $value->title; ?></li>
-        </ul>
-    </div>
-</div>
-
-
-<div class="directory-profile">
+<div class="directory-profile page_height">
 
     <div class="dp-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8">
-
-                    
-                    <div class="owl-carousel owl-theme">
-                        <?php
-                        foreach ($get_image->result_array() as $images) {
-                            $img = $images['file_name'];
-                        ?>
-                        <div class="item"><img src="<?php echo base_url() ?>assets/images/hosts/<?php echo $img; ?>" alt="images"></div>
-                        <?php } ?>
-                    </div>
-
-                </div>
-
-                <div class="col-md-4 dph-reviews" id="street_map" style="height: 400px"></div>
-            </div>
-        </div>
+        <div class="dph-reviews" id="street_map" style="height: 400px"></div>
     </div>
  
 
@@ -61,14 +28,14 @@
                     <?php if ($user_data->oauth_provider == 'facebook'){ ?>
                         <img src="<?php echo $user_data->picture_url; ?>" class="profile-img" alt="host profile picture">
                     <?php }else{ ?>
-                        <img src="<?php echo base_url() ?>assets/images/profile/<?php echo $user_data->images; ?>" class="profile-img" alt="host profile picture">
+                        <img src="<?php echo base_url() ?>assets/images/profile/<?php echo $user_data->images; ?>" class="profile-img"  onerror="this.src='<?php echo base_url() ?>assets/images/profile/alt.png';">
                     <?php } ?>
 
                     <div class="location_style">
                         <h4><?php echo $value->title; ?></h4>
                         <div class="col-sm-6" style="margin-bottom: 10px">
                             <div class="name_dollar">
-                                <p style="font-size: 20px"><i class="fa fa-usd"></i><?php echo $value->amount; ?></p>
+                                <p style="font-size: 20px"><i class="fa fa-usd"></i> <?php echo $value->amount; ?></p>
                                 <p style="font-size: 20px"><i class="fa fa-user"></i> <?php echo $user_data->fname.' '.$user_data->lname; ?></p>
                             </div>
                             
@@ -76,15 +43,7 @@
                         <div class="col-sm-6">
                             <div class="name_dollar">
                                 <?php
-
-
-                                $this->db->where('m_userid', $this->session->userdata('airbnb'));
-                                $this->db->where('hostid', $value->id);
-                                $this->db->where('payment_status','success');
-                                $this->db->where('status','1');
-                                $pay_query = $this->db->get('payments');
-                                if ($pay_query->num_rows()>0) {  ?>
-
+                                if ($value->book == 0) {  ?>
                                     <p>
                                         <?php if (!empty($user_data->phone)) { ?>
                                         <i class="fa fa-phone-square"></i> <?php echo $user_data->phone; ?>
@@ -103,62 +62,7 @@
                                 <?php } ?>
                             </div>
                         </div>
-                        <?php if (!empty($this->session->userdata('airbnb')) || !empty($this->session->userdata('web_session'))  || !empty($this->session->userdata('user'))) { ?>
-                        <div class="col-sm-12">
-                            <?php
-
-                            if ($this->session->userdata('airbnb') !== $value->userid) {
-
-                                $this->db->where('id1', $this->session->userdata('airbnb'));
-                                $this->db->where('id2', $user_data->id);
-                                $this->db->where('root', 0);
-                                $query_inbox = $this->db->get("inbox");
-
-                                if ($query_inbox->num_rows()>0) {
-                                    $value_s = $query_inbox->row();
-
-                                    /*$this->db->where('id',$value_s->id2);
-                                    $this->db->where('status',1);
-                                    $query=$this->db->get('alluser');*/
-                            ?>
-                                    <button class="btn btn-default btn-block btn-lg" 
-                                    value="<?php echo $value_s->id.':'.$this->session->userdata('airbnb').':'.$user_data->id; ?>" data-toggle="modal" data-target="#replay_message_sender" onclick="reply_inbox_sender(this)">Send Message</button>
-
-                            <?php }else{ ?>
-
-                                <button type="button" value="<?php echo $user_data->id; ?>" class="btn btn-default btn-block btn-lg" onclick="confirm_chat_with_this_user(this)">Request to message user</button>
-
-                            <?php } } ?>
-
-                        </div>
-
-                        <div class="modal fade-scale" id="replay_message_sender" data-backdrop="static" data-keyboard="false">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-close"></i></button>
-                                        <h4 class="modal-title text-center">Reply Message</h4>
-                                    </div>
-                                    <div class="modal-body" style="background: #ffffff;">
-
-                                        <div class="message_body" id="conversation_start2">
-
-
-                                        </div>
-                                        <div class="message_area">
-                                            <textarea class="form-control" id="message_body2" style="height: 80px !important;background: #eee;" placeholder="type message..."></textarea>
-                                        </div>
-
-                                    </div>
-                                    <div class="modal-footer" style="text-align: right">
-                                        <button type="button" class="btn" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-default" id="send_button2" onclick="submit_messege_sender(this)">Send</button>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <?php } ?>
+                        
                         
                     </div>
                 </div>
@@ -226,8 +130,8 @@
                             <img src="<?php echo base_url() ?>assets/images/icons/3.png" alt=""> 
                             <span class="lead">Parking Capacity</span> 
 
-                            <span class="lpps"><i class="fa fa-calendar-check-o"></i> RV Types: </span><?php echo $value->rv_types; ?></br>
-                            <span class="lpps"><i class="fa fa-hand-o-right"></i> Upto </span><u><?php echo $value->rv_sizes; ?></u> feet long.</br>
+                            <span class="lpps"><i class="fa fa-calendar-check-o"></i> Vehicles Types: </span><?php echo $value->rv_types; ?></br>
+                            <span class="lpps"><i class="fa fa-hand-o-right"></i> Number of spaces: </span><u><?php echo $value->rv_sizes; ?></u> </br>
                         </p>
                         <p class="space80">
                             <img src="<?php echo base_url() ?>assets/images/icons/bt1.png" alt=""> 
@@ -435,9 +339,8 @@
 
                 <div class="col-md-4">
                     <div class="book-table">
+                    <?php if($value->book==1){ ?>
 
-
-                        <div class="bt-head text-center">
                             <?php
 
                             $this->db->where('hostid', $value->id);
@@ -452,9 +355,8 @@
                             }
 
                             ?>
-                        </div>
 
-
+                        
                         <div class="bt-head text-center">
                             <h5>Request to Book</h5>
                             <p>100% refundable · You won’t be charged yet</p>
@@ -487,14 +389,12 @@
                             <?php } ?>
 
                         </div>
-                    </div>
-
-
-
-                    <div class="call-rep">
-                        <p class="lead">Would you like to report a problem?</p>
-                        <p>Email our representative.</p> <a href="#">admin@airrv.com</a> 
-                    </div>
+                    <?php } ?>
+                        <div class="call-rep">
+                            <p class="lead">Would you like to report a problem?</p>
+                            <p>Email our representative.</p> <a href="#">admin@airrv.com</a> 
+                        </div>
+                    </div>                   
                     
 
                 </div>
@@ -503,8 +403,6 @@
     </div>
 </div>
 
-
-<script type="text/javascript" src="<?php echo base_url() ?>assets/js/owl.carousel.js"></script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKf3D0CKv98W_EGTk5QfKANDh0CZuAlNc&libraries=places&callback=initialized" async defer></script>
 
@@ -518,7 +416,7 @@
       geocoder = new google.maps.Geocoder();
       var mapOptions = 
       {
-        zoom: 18
+        zoom: 15
       }
 
       map = new google.maps.Map(document.getElementById('street_map'), mapOptions);
@@ -543,7 +441,6 @@
               map: map,
               position: results[0].geometry.location,
               zoom: 18,
-
               content: '<div class="map_info_style"><i class="fa fa-map-marker" aria-hidden="true"></i> ' +address+'</div>'
           });
         } else {
@@ -552,23 +449,5 @@
       });
     }
 
-
-    $('.owl-carousel').owlCarousel({
-        loop:true,
-        margin:10,
-        nav:true,
-        navText: ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'],
-        responsive:{
-            0:{
-                items:1
-            },
-            600:{
-                items:1
-            },
-            1000:{
-                items:1
-            }
-        }
-    })
 </script>
-<?php }}} ?>
+<?php }} ?>

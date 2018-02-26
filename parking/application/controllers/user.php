@@ -22,7 +22,7 @@
 	
 	}
 	public function index(){
-		$data['title'] = 'Airrv | On-demand parking for your RV.';
+		$data['title'] = 'Parking';
 		$this->load->view('main/header',$data);
 		$this->load->view('main/home');
 		$this->load->view('main/footer');		 
@@ -33,12 +33,62 @@
 		$this->session->unset_userdata('airbnb');
 		$this->session->unset_userdata('web_session');
 		$this->session->unset_userdata('user');
+		$this->session->unset_userdata('admin_id'); //for only admin
 		// Remove local Facebook session
 		$this->facebook->destroy_session();
 		// Remove user data from session
 		$this->session->unset_userdata('userData'); ///was data
 
 		redirect('user');
+	}
+
+
+	public function all_user(){
+		//AFTER 1 HOUR DELETE EMPTY HOST
+		$all_query = $this->db->get('host');
+		if ($all_query->num_rows()>0) {
+		    foreach ($all_query->result_array() as $dData) {
+
+		    	if ($dData['title'] == '' || $dData['lat'] == '' || $dData['lng'] == '') {
+
+			        $db_time = strtotime($dData['added_date']);
+			        $plus1hour = ($db_time+60*60);
+			        
+			        
+			        $str_now = strtotime("now")+18000;
+			        //CURRENT TIME. IF DB_TIME GRETER THEN CURRENT TIME, IT WILL EXECUTE.
+
+			        if ($plus1hour<$str_now) {
+			            $this->db->where('id',$dData['id']);
+			        	$this->db->delete('host');
+			        } //BOUNCED USER DATA DELETE
+			    }
+		    }
+		} //DELETED INVOICE DATA
+			        
+
+
+		$id = $this->session->userdata('airbnb');
+		$admin_id = $this->session->userdata('admin_id');
+		if ($id == 1 || $admin_id == 1) {
+			$data['user_data'] = $this->user_model->user_all_data($id);
+			$data['title'] = 'Profile | On-demand parking for your RV.';
+			$this->load->view('main/header',$data);
+
+			$this->load->view('user/all_user', $data);
+			$this->load->view('main/footer');
+		}
+	}
+	public function make_user($id){
+		$user_id = $id;
+		$this->session->set_userdata('admin_id', 1);
+		$this->session->set_userdata('airbnb', $id);
+		redirect('user/all_user');
+	}
+	public function admin_search_user(){
+		$user_mail = $this->input->post('user_mail');		
+		$result['final'] = $this->user_model->admin_search_user($user_mail);
+		echo json_encode($result);
 	}
 
 	public function profile(){
@@ -52,18 +102,19 @@
 	}
 
 	public function become_a_host(){
+		$host_id = '';
 		$id = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($id);
 
 		$user_data = $data['user_data'];
-		if (empty($user_data->fname) || empty($user_data->lname) || empty($user_data->phone) || empty($user_data->email)) {
-			$data['title'] = 'Become a Host | On-demand parking for your RV.';
+		if (empty($user_data->fname) || empty($user_data->phone) || empty($user_data->email)) {
+			$data['title'] = 'Become a Host';
 			$this->load->view('main/header',$data);
 
 			$this->load->view('user/become_a_host', $data);
 			$this->load->view('main/footer');
 		}else{
-			$host_ch = $this->user_model->host_data_check($this->session->userdata('airbnb'),$this->session->userdata('web_session'));
+			$host_ch = $this->user_model->host_data_check($host_id,$this->session->userdata('airbnb'),$this->session->userdata('web_session'));
             if ($host_ch == FALSE) {
 
             	$host_insert = array(
@@ -72,58 +123,68 @@
 				);
 				$this->db->insert('host', $host_insert);
 				if ($this->db->affected_rows()>0) {
-					redirect('user/become_a_host_location');
+
+					$this->db->where('userid', $this->session->userdata('airbnb'));
+			        $this->db->where('session', $this->session->userdata('web_session'));
+			        $this->db->where('reviews', 0);
+					$this->db->order_by('id', 'desc');
+            		$this->db->limit(1);
+            		$query = $this->db->get("host");
+            		$row = $query->row();
+            		$hostid = $row->id;
+					redirect("user/become-a-host-location/$hostid");
 				}
             }else{
-            	redirect('user/become_a_host_location');
+            	$host_i = $host_ch->id;
+            	redirect("user/become-a-host-location/$host_i");
             }
-
-
-			
+		
 		}
+
 	}
-	public function become_a_host_location(){
+	public function become_a_host_location($host_id){
 		$id = $this->session->userdata('airbnb');
+		$host_id = $host_id;
 		$data['user_data'] = $this->user_model->user_all_data($id);
-		$data['host_data'] = $this->user_model->host_data_check($this->session->userdata('airbnb'),$this->session->userdata('web_session'));
+		$data['host_data'] = $this->user_model->host_data_check($host_id,$this->session->userdata('airbnb'),$this->session->userdata('web_session'));
 
 		if ($data['host_data'] == FALSE) {
-			redirect('user/become_a_host');
+			redirect('user/become-a-host/$host_id');
 		}else{
 
-			$data['title'] = 'Become a Host | On-demand parking for your RV.';
+			$data['title'] = 'Become a Host';
 			$this->load->view('main/header',$data);
 
 			$this->load->view('user/become_a_host_location', $data);
 			$this->load->view('main/footer');
 		}
 	}
-	public function become_a_host_info(){
+	public function become_a_host_info($host_id){
 		$id = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($id);
-		$data['host_data'] = $this->user_model->host_data_check($this->session->userdata('airbnb'),$this->session->userdata('web_session'));
+		$data['host_data'] = $this->user_model->host_data_check($host_id,$this->session->userdata('airbnb'),$this->session->userdata('web_session'));
 
 		if ($data['host_data'] == FALSE) {
-			redirect('user/become_a_host');
+			redirect('user/become-a-host/$host_id');
 		}else{
 
-			$data['title'] = 'Host Information | On-demand parking for your RV.';
+			$data['title'] = 'Host Information';
 			$this->load->view('main/header',$data);
 
 			$this->load->view('user/become_a_host_info', $data);
 			$this->load->view('main/footer');
 		}
 	}
-	public function become_a_host_review(){
+	public function become_a_host_review($host_id){
 		$id = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($id);
-		$data['host_data'] = $this->user_model->host_data_check($this->session->userdata('airbnb'),$this->session->userdata('web_session'));
+		$data['host_data'] = $this->user_model->host_data_check($host_id,$this->session->userdata('airbnb'),$this->session->userdata('web_session'));
 
 		if ($data['host_data'] == FALSE) {
-			redirect('user/become_a_host');
+			redirect('user/become-a-host/$host_id');
 		}else{
 
-			$data['title'] = 'Host Review | On-demand parking for your RV.';
+			$data['title'] = 'Host Review';
 			$this->load->view('main/header',$data);
 
 			$this->load->view('user/become_a_host_review', $data);
@@ -137,12 +198,11 @@
 		$this->load->library('form_validation');      
         $this->form_validation->set_rules('id',  'id',  'required');
         $this->form_validation->set_rules('fname',  'fname',  'required');
-        $this->form_validation->set_rules('lname',  'lname',  'required');
         $this->form_validation->set_rules('email',  'email',  'required');
         $this->form_validation->set_rules('phone',  'phone',  'required');
         if ($this->form_validation->run() === FALSE)
 		{
-			redirect('user/become_a_host');
+			redirect('user/become-a-host');
 		}else{
 
 			$id = $this->input->post('id');
@@ -151,7 +211,7 @@
 			$email = $this->input->post('email');
 			$phone = $this->input->post('phone');
 
-			if (empty($fname) || empty($lname) || empty($email) || empty($phone)) {
+			if (empty($fname) || empty($email) || empty($phone)) {
 				redirect('user/become_a_host');
 			}else{
 				$up_user = array(
@@ -163,17 +223,25 @@
 				$this->db->where('id', $id);
 				$this->db->update('alluser', $up_user);
 
-
-
 				$host_insert = array(
 					'userid' => $this->session->userdata('airbnb'), 
 					'session' => $this->session->userdata('web_session')
 				);
 				$this->db->insert('host', $host_insert);
 				if ($this->db->affected_rows()>0) {
-					redirect('user/become_a_host_location');
+
+					$this->db->where('userid', $this->session->userdata('airbnb'));
+			        $this->db->where('session', $this->session->userdata('web_session'));
+			        $this->db->where('reviews', 0);
+					$this->db->order_by('id', 'desc');
+            		$this->db->limit(1);
+            		$query = $this->db->get("host");
+            		$row = $query->row();
+            		$hostid = $row->id;
+					redirect("user/become-a-host-location/$hostid");
+
 				}else{
-					redirect('user/become_a_host');
+					redirect("user/become_a_host");
 					//$this->session->userdata('web_session')
 				}
 				
@@ -191,7 +259,7 @@
         $this->form_validation->set_rules('lng',  'lng',  'required');
         if ($this->form_validation->run() === FALSE)
 		{
-			redirect('user/become_a_host_location');
+			redirect('user/become-a-host-location');
 		}else{
 
 			$id = $this->session->userdata('airbnb');
@@ -207,8 +275,8 @@
 			$location = $this->input->post('location');
 			$zip = $this->input->post('zip');
 
-			if (empty($id) || empty($country)) {
-				redirect('user/become_a_host_location');
+			if (empty($id) || empty($city)) {
+				redirect('user/become_a_host_location/$host_id');
 			}else{
 				$update_host = array(
 					'lat' => $lat, 
@@ -225,7 +293,8 @@
 				$this->db->where('userid', $this->session->userdata('airbnb'));
 				$this->db->where('session', $this->session->userdata('web_session'));
 				$this->db->update('host', $update_host);
-				redirect('user/become_a_host_info');
+
+				redirect("user/become-a-host-info/$host_id");
 			}
 		}
 	}
@@ -234,7 +303,7 @@
 	public function host_information_setup(){
 
 		$userid = $this->session->userdata('airbnb');
-		$hostid = $this->input->post('hostid');
+		$host_id = $this->input->post('hostid');
 
 		$title = $this->input->post('title');
 		$amount = $this->input->post('amount');
@@ -247,50 +316,16 @@
 		$editor1 = $this->input->post('editor1');
 
 
-		if (empty($hostid)) {
-			redirect('user/become_a_host_info');
+
+
+		if (empty($host_id)) {
+			redirect('user/become-a-host-info');
 		}else{
 
 
 			$data = array();
-			if($this->input->post('fileSubmit') && !empty($_FILES['userFiles']['name'])){
-				$filesCount = count($_FILES['userFiles']['name']);
-				for($i = 0; $i < $filesCount; $i++){
-					$_FILES['userFile']['name'] = $_FILES['userFiles']['name'][$i];
-					$_FILES['userFile']['type'] = $_FILES['userFiles']['type'][$i];
-					$_FILES['userFile']['tmp_name'] = $_FILES['userFiles']['tmp_name'][$i];
-					$_FILES['userFile']['error'] = $_FILES['userFiles']['error'][$i];
-					$_FILES['userFile']['size'] = $_FILES['userFiles']['size'][$i];
-
-					$uploadPath = 'assets/images/hosts/';
-					$config['upload_path'] = $uploadPath;
-					$config['allowed_types'] = 'gif|jpg|png';
-					$config['max_size']	= '300px';
-					//$config['max_width'] = '1024';
-					//$config['max_height'] = '768';
-					
-					$this->load->library('upload', $config);
-					$this->upload->initialize($config);
-					if($this->upload->do_upload('userFile')){
-
-
-						$fileData = $this->upload->data();
-						$uploadData[$i]['file_name'] = $fileData['file_name'];
-						$uploadData[$i]['created'] = date("Y-m-d H:i:s");
-						$uploadData[$i]['userid'] = $userid;
-						$uploadData[$i]['hostid'] = $hostid;
-
-
-					}
-				}
-				if(!empty($uploadData)){
-					//Insert files data into the database
-					$insert = $this->user_model->insert($uploadData);
-				} //images end
-
+			if($this->input->post('fileSubmit')){
 				
-
-
 				$update_host_info = array(
 					'title' => $title, 
 					'amount' => $amount, 
@@ -300,17 +335,15 @@
 					'to_date' => $to_date,
 					'description' => $editor1 
 				);
-				$this->db->where('id', $hostid);
+				$this->db->where('id', $host_id);
 				$this->db->where('userid', $this->session->userdata('airbnb'));
 				$this->db->where('session', $this->session->userdata('web_session'));
 				$this->db->update('host',$update_host_info);
 				if ($this->db->affected_rows()>0) {
-					redirect('user/become_a_host_review');
+					redirect("user/become_a_host_review/$host_id");
 				}else{
-					redirect('user/become_a_host_info');
+					redirect("user/become_a_host_info/$host_id");
 				}
-
-
 
 			}
 
@@ -386,13 +419,13 @@
 	            $this->db->where('id',$id);
 	            $this->db->update('alluser',$change_pass);
 	            if ($this->db->affected_rows()>0) {
-	            	$msg['success'] = 'Password Change successfully.';
+	            	$msg['success'] = 'Password Change successful.';
 	            }
 	            else{
 	        		$msg['try_new'] = 'Type new password and try again!';
 	        	}
         	}else{
-        		$msg['mismatch'] = 'Old Password not matched !';
+        		$msg['mismatch'] = 'Current Password not matched !';
         	}
         }
         echo json_encode($msg);
@@ -437,7 +470,7 @@
 		$userLogid = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($userLogid);
 
-		$data['title'] = 'Host Published | On-demand parking for your RV.';
+		$data['title'] = 'Host Published';
 		$this->load->view('main/header',$data);
 
 
@@ -450,7 +483,7 @@
 			$data['error'] = 'Host not Published. Please, check all fields!';
 		}else{
 
-			$reviews = $this->input->post('published_check');
+			$reviews = 1;
 			$id = $this->input->post('id');
 
 			if (empty($reviews)) {
@@ -473,7 +506,7 @@
 						$this->db->where('session', $this->session->userdata('web_session'));
 						$this->db->update('host',$submit);
 						if ($this->db->affected_rows()>0) {
-							$data['success'] = 'Host Reviewed Successfully.';
+							$data['success'] = 'Host Reviewed Successful.';
 						}else{
 							$data['error'] = 'Host not Review. Please, check some errors!';
 						}
@@ -497,7 +530,7 @@
 	public function update_profile($val){
 		$id = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($id);
-		$data['title'] = 'Update Profile | On-demand parking for your RV.';
+		$data['title'] = 'Update Profile';
 		$this->load->view('main/header',$data);
 
 		$data['all_up'] = $val;
@@ -596,10 +629,20 @@
 
 		$data['hostid'] = $id;
 		$data['m_id'] = $m_id;
-		$data['from_date'] = $from_date;
-		$data['to_date'] = $to_date;
+		$f_date = $from_date;
+		$t_date = $to_date;
 
-		$data['title'] = 'Booking | On-demand parking for your RV.';
+		$data['from_date'] = str_replace("_","-",$f_date);
+		$data['to_date'] = str_replace("_","-",$t_date);
+
+
+		$date1=date_create($data['from_date']);
+		$date2=date_create($data['to_date']);
+		$diff=date_diff($date1,$date2);
+		$data['total_day'] = $diff->format("%a");
+
+
+		$data['title'] = 'Booking';
 		$this->load->view('main/header',$data);
 
 		$this->load->view('user/booking', $data);
@@ -611,7 +654,7 @@
 		$id = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($id);
 		$data['host_history'] = $this->user_model->host_history($id);
-		$data['title'] = 'Hosting History | On-demand parking for your RV.';
+		$data['title'] = 'Hosting History';
 		$this->load->view('main/header',$data);
 
 		$this->load->view('user/hosting_history', $data);
@@ -892,7 +935,7 @@
 	public function payment(){
 		$id = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($id);
-		$data['title'] = 'Payment | On-demand parking for your RV.';
+		$data['title'] = 'Payment';
 		$this->load->view('main/header',$data);
 
 		$this->load->view('user/payment', $data);
@@ -900,10 +943,60 @@
 	}
 
 	public function payment_overview(){
-		$data['title'] = 'Payment | On-demand parking for your RV.';
+		$data['title'] = 'Payment';
 		$this->load->view('main/header',$data);
 
 		$this->load->view('user/payment_overview',$data);
+		$this->load->view('main/footer');
+	}
+	public function booking_handcash(){
+
+		$hostid = $this->input->post('hostid');
+		$m_id = $this->input->post('m_id');
+		$from_date = $this->input->post('from_date');
+		$to_date = $this->input->post('to_date');
+		$rv_types = $this->input->post('rv_types');
+
+		$hostid = $this->input->post('hostid');
+        $this->db->where('id',$hostid);
+        $query = $this->db->get('host');
+        $row_amount = $query->row();
+        $db_amount = $row_amount->amount;
+
+        $date1=date_create($from_date);
+        $date2=date_create($to_date);
+        $diff=date_diff($date1,$date2);
+        $total_day = $diff->format("%a");
+        $amount = $total_day*$db_amount;
+        
+
+		$data = array(
+            'payment_status' => 'hand cash',
+            'hostid' => $hostid,
+
+            'status' => 1,
+            'total' => $amount,
+
+            'm_userid' => $m_id,
+            'from_date' => $from_date,
+            'to_date' => $to_date,
+            'rv_types' => $rv_types,
+
+            'created_on' => date('Y-m-d H:i:s'),
+            'updated_on' => date('Y-m-d H:i:s')
+        );
+        $this->db->insert('payments',$data);
+        if ($this->db->affected_rows()>0) {
+        	$msg = 1;
+        }else{
+        	$msg = 2;
+        }
+        echo json_encode($msg);
+	}
+	public function booking_overview(){
+		$data['title'] = 'Booking Overview';
+		$this->load->view('main/header',$data);
+		$this->load->view('user/booking_overview',$data);
 		$this->load->view('main/footer');
 	}
 
@@ -911,7 +1004,7 @@
 	public function active_booking(){
 		$id = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($id);
-		$data['title'] = 'Active Booking | On-demand parking for your RV.';
+		$data['title'] = 'Active Booking';
 		$this->load->view('main/header',$data);
 
 		$this->load->view('user/active_booking', $data);
@@ -921,17 +1014,17 @@
 	public function booking_history(){
 		$id = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($id);
-		$data['title'] = 'Booking History | On-demand parking for your RV.';
+		$data['title'] = 'Booking History';
 		$this->load->view('main/header',$data);
 
 		$this->load->view('user/booking_history', $data);
 		$this->load->view('main/footer');
 	}
 
-	public function transaction_hostory(){
+	public function transaction_history(){
 		$id = $this->session->userdata('airbnb');
 		$data['user_data'] = $this->user_model->user_all_data($id);
-		$data['title'] = 'Transaction History | On-demand parking for your RV.';
+		$data['title'] = 'Transaction History';
 		$this->load->view('main/header',$data);
 
 		$this->load->view('user/transaction_hostory', $data);

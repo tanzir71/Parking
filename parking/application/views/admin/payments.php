@@ -24,13 +24,16 @@
 								<table class="table table-striped" style="margin-bottom: 30px;border:1px solid #ddd">
 									<thead>
 										<th>#</th>
-										<th>Title:</th>
-										<th>Location:</th>
-										<th>Vendor name:</th>
-										<th>Phone number:</th>
-										<th>Email:</th>
-										<th>Amount:</th>
-										<th colspan="2">Booking Date:</th>
+										<th>Title</th>
+										<th>Location</th>
+										<th>Vendor name</th>
+										<th>Phone number</th>
+										<th>Email</th>
+										<th>Amount</th>
+										<th>Vehicles types</th>
+										<th>Booking Date From</th>
+										<th>To</th>
+										<th>Pay method</th>
 										<th>Status</th>
 									</thead>
 									<tbody>
@@ -69,14 +72,26 @@
 													<td><?php echo $u_q_wor->phone; ?></td>
 													<td><?php echo $u_q_wor->email; ?></td>
 													<td><i class="fa fa-usd"></i><?php echo $value['total']/100; ?></td>
+													<td width="12%"><?php echo $value['rv_types']; ?></td>
 													<td width="12%"><?php echo $value['from_date']; ?> to </td>
 													<td width="12%"><?php echo $value['to_date']; ?></td>
 													<td>
 														<?php 
 															if ($value['payment_status']=='success') {
-																echo 'Active';
+																echo 'Credit Cart';
+															}else if ($value['payment_status'] == 'hand cash') {
+																echo "Hand Cash";
+															}
+														?>
+													</td>
+													<td>
+														<?php 
+															$to_date = strtotime($value['to_date']);
+															$now = strtotime(date("Y-m-d"));
+															if ($to_date<$now) {
+																echo '<span style="color:red">Passed</span>';
 															}else{
-																echo "Passed";
+																echo '<span style="color:green">Active</span>';
 															}
 														?>
 													</td>

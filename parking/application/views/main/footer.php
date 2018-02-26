@@ -1,72 +1,57 @@
-    
-        <div class="cta-wrap">
-            <div class="container">
-                <div class="row center-content">
-                    <div class="col-md-8 col-sm-7">
-                        <p>Earn extra income by leasing your parking</p>
-                    </div>
-                    <div class="col-md-4 col-sm-5 text-right"> <a href="<?php echo base_url() ?>user/become_a_host" class="cta-btn">Become a host</a> </div>
+    <div class="cta-wrap">
+        <div class="container">
+            <div class="row center-content">
+                <div class="col-md-8 col-sm-7">
+                    <p>Earn extra income by leasing your parking</p>
                 </div>
+                <div class="col-md-4 col-sm-5 text-right"> <a href="<?php echo base_url() ?>user/become-a-host" class="cta-btn">Become a host</a> </div>
             </div>
         </div>
-        <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-3 col-sm-3 footer-widget">
-                        <h5>About Us</h5>
-                        <p> <a href="#">Questions? 080-123-4564</a>
-                            <br> <a href="#">Our History</a>
-                            <br> <a href="#">Entrepreneurship</a>
-                            <br> <a href="#">Finance</a>
-                            <br> <a href="#">Human Resources</a>
-                            <br> <a href="#">Marketing</a>
-                            <br> <a href="#">Sales</a> </p>
-                    </div>
-                    <div class="col-md-3 col-sm-3 footer-widget">
-                        <h5>How it works</h5>
-                        <p> <a href="#">What we do</a>
-                            <br> <a href="#">Who we are</a>
-                            <br> <a href="#">Join the team</a>
-                            <br> <a href="#">Press</a>
-                            <br> <a href="#">Contact Us</a>
-                            <br> <a href="#">Contribute Content</a> </p>
-                    </div>
-                    <div class="col-md-3 col-sm-3 footer-widget">
-                        <h5>Advertise</h5>
-                        <p> <a href="#">Advertise With Us</a>
-                            <br> <a href="#">Account Login</a>
-                            <br> <a href="#">Case Studies</a>
-                            <br> <a href="#">Partner With Us</a> </p>
-                    </div>
-                    <div class="col-md-3 col-sm-3 footer-widget last">
-                        <ul class="payment-methods">
-                            <li> <img src="<?php echo base_url() ?>assets/images/other/1/1.png" class="img-responsive" alt="" /> </li>
-                            <li> <img src="<?php echo base_url() ?>assets/images/other/1/2.png" class="img-responsive" alt="" /> </li>
-                            <li> <img src="<?php echo base_url() ?>assets/images/other/1/3.png" class="img-responsive" alt="" /> </li>
-                        </ul>
-                        <p>Stay in the loop on all upcoming promotions,discounts and latest updates</p>
-                        <form class="f-newsletter">
-                            <input type="email" placeholder="E-mail address"> </form>
-                        <p class="copy">&copy; <?php echo date("Y") ?> Loocal. All rights reserved 2017.</p>
+    </div>
+   <footer class="bg-dark type-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-3 col-sm-6 col-xs-12">
+                    <div class="footer-block">
+                        <img src="<?php echo base_url(); ?>assets/images/logo_parkingbee.png" alt="" class="logo-footer" data-pin-nopin="true">
+                        <div class="f_text color-grey-7">ParkingBee is a community of students, locals, and neighbors. We help people earn extra money by connecting people with spare space to those in need of parking.</div>
+                        
                     </div>
                 </div>
-            </div>
-            <div class="footer-social">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-2 col-sm-2 col-xs-2"> <a href="#"><span class="hidden-xs hidden-sm ">Contact</span><span class="visible-xs visible-sm hidden-md hidden-lg"><i class="fa fa-envelope-o"></i></span></a> </div>
-                        <div class="col-md-2 col-sm-2 col-xs-2"> <a href="#"><span class="hidden-xs hidden-sm ">Facebook</span><span class="visible-xs visible-sm hidden-md hidden-lg"><i class="fa fa-facebook"></i></span></a> </div>
-                        <div class="col-md-2 col-sm-2 col-xs-2"> <a href="#"><span class="hidden-xs hidden-sm ">Twitter</span><span class="visible-xs visible-sm hidden-md hidden-lg"><i class="fa fa-twitter"></i></span></a> </div>
-                        <div class="col-md-2 col-sm-2 col-xs-2"> <a href="#"><span class="hidden-xs hidden-sm ">Google+</span><span class="visible-xs visible-sm hidden-md hidden-lg"><i class="fa fa-google-plus"></i></span></a> </div>
-                        <div class="col-md-2 col-sm-2 col-xs-2"> <a href="#"><span class="hidden-xs hidden-sm ">Pinterest</span><span class="visible-xs visible-sm hidden-md hidden-lg"><i class="fa fa-pinterest"></i></span></a> </div>
-                        <div class="col-md-2 col-sm-2 col-xs-2"> <a href="#"><span class="hidden-xs hidden-sm ">Linkedin</span><span class="visible-xs visible-sm hidden-md hidden-lg"><i class="fa fa-linkedin"></i></span></a> </div>
+                <div class="col-lg-2 col-lg-offset-1 col-md-3 col-sm-6 col-sm-6">
+                   <div class="footer-block">
+                        <a href="/find_parking">Renting</a><br><br>
+                        <a href="/list_your_spot">Listing</a>
+                   </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6 col-xs-12">
+                   <div class="footer-block">
+                       <a href="/contact">Contact Us</a><br><br>
+                       <a href="/terms">Terms &amp; Conditions</a>
+                   </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                   <div class="footer-block">
+                     <h6>Contact Info</h6>
+                       <div class="contact-info">
+                           <div class="contact-line color-grey-3"><span>Problems or bugs? Let us know so we can help you out!</span></div>
+                        <div class="contact-line color-grey-3"><i class="fa fa-phone"></i><a href="tel:12676388000">267-638-8000</a></div>
+                        <div class="contact-line color-grey-3"><i class="fa fa-envelope-o"></i><a href="mailto:">support@betaparking.com</a></div>
                     </div>
+                       <div class="footer-share">
+                            <a href="#"><span class="fa fa-facebook"></span></a>
+                            <a href="#"><span class="fa fa-twitter"></span></a>
+                            <a href="#"><span class="fa fa-instagram"></span></a>
+                        </div>
+                   </div> 
                 </div>
             </div>
-        </footer>
+        </div>    
+    </footer>
+
     </div>
     <!-- JAVASCRIPT =============================-->
-    <script src="http://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="<?php echo base_url() ?>assets/js/bootstrap.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/vendors/slick/slick.min.js"></script>
     <script src="<?php echo base_url() ?>assets/js/vendors/jquery.easing.min.js"></script>

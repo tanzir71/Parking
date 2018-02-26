@@ -4,13 +4,13 @@
 <div class="home-directory">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
 
             	<?php include_once'profile_sidebar.php'; ?>
 
             </div>
 
-            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
             	<div class="panel panel-default">
             		<div class="panel-heading">
             			<h3 class="panel-title"><i class="fa fa-user"></i> Update Profile</h3>
@@ -45,7 +45,7 @@
 
                                 <div class="form-group col-sm-6 col-xs-12">
                                     <label>Birthday: </label>
-                                    <input class="form-control" name="from_date" id="b_date" type="text" placeholder="yyyy-mm-dd" value="<?php echo $user_data->birthday; ?>">
+                                    <input class="form-control" name="from_date" id="to" type="text" placeholder="yyyy-mm-dd" value="<?php echo $user_data->birthday; ?>">
                                 </div>
 
                                 <div class="form-group col-sm-6 col-xs-12">
@@ -104,7 +104,7 @@
                             <form enctype="multipart/form-data" action="<?php echo base_url() ?>user/change_profile_picture" method="post">
 
                                 <div class="form-group col-sm-7 col-xs-12">
-                                    <img class="img img-responsive" src="<?php echo base_url() ?>assets/images/profile/<?php echo $user_data->images; ?>" alt="Image" style="height: 300px;">
+                                    <img class="img img-responsive" src="<?php echo base_url() ?>assets/images/profile/<?php echo $user_data->images; ?>"  onerror="this.src='<?php echo base_url() ?>assets/images/profile/alt.png';" style="height: 300px;">
                                 </div>
                                 <div class="form-group col-sm-7 col-xs-12">
                                     <label>Browse Image: </label>

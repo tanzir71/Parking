@@ -17,6 +17,7 @@ class Payment extends CI_Controller {
         $m_id = $this->input->post('m_id');
         $from_date = $this->input->post('from_date');
         $to_date = $this->input->post('to_date');
+        $rv_types = $this->input->post('rv_types');
 
 
         $hostid = $this->input->post('hostid');
@@ -66,6 +67,7 @@ class Payment extends CI_Controller {
                 'm_userid' => $m_id,
                 'from_date' => $from_date,
                 'to_date' => $to_date,
+                'rv_types' => $rv_types,
 
                 'card_number' => $card_number,
                 'ex_mm' => $ex_mm,

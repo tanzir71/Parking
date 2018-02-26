@@ -4,8 +4,8 @@ var li=links(); //global declare
 $( function() {
   $( "#slider-range" ).slider({
     range: "min",
-    value: 8,
-    min: 6,
+    value: 1,
+    min: 1,
     max: 50,
     slide: function( event, ui ) {
       $( "#amount" ).val(ui.value );
@@ -75,7 +75,7 @@ $("#location_input").keyup(function(){
 
 
 // PARKING NOW MAIN SEARCH BUTTON
-$("#final_search").click(function(){
+$("#location_search").on('submit',function (e){
   var input_data = $('#location_input').val().trim();
   var from = $('#from').val().trim();
 
@@ -97,21 +97,27 @@ $("#final_search").click(function(){
           var i;
           var full_data='';
           for(i=0; i<datas.length;i++){
-            var location = datas[i].street;
+            var location = datas[i].location;
             var amount = datas[i].amount;
             var id = datas[i].id;
             var title = datas[i].title;
+            var title_link= title.toLowerCase();
 
             var rv_types = datas[i].rv_types;
             var rv_sizes = datas[i].rv_sizes;
 
             var to_date = datas[i].to_date;
-            var images = datas[i].file_name;
+            var book = datas[i].book;
+            if (book==1) {
+              var book_now = '<a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank" class="btn btn-book-now">Book now</a>';
+            }else{
+              var book_now = '';
+            }
 
             full_data +=
               '<div class="listing mob-space30 space30">'+
-                  '<div class="col-md-4 pad0">'+
-                    '<div class="listing-img bg-image" style="background: rgba(0, 0, 0, 0) url(&quot;'+li+'assets/images/hosts/'+images+'";) no-repeat scroll center center / cover ;">'+
+                  '<div class="col-md-2 pad0 hidden-xs col-sm-2">'+
+                    '<div class="listing-img bg-image" style="background: rgba(0, 0, 0, 0) url('+li+'assets/images/icons/placeholder-parking.png) no-repeat ;">'+
                         '<div class="li-overlay">'+
                           '<div class="li-overlay-inner">'+
                             '<a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank" class="link"></a>'+
@@ -119,38 +125,36 @@ $("#final_search").click(function(){
                         '</div>'+
                     '</div>'+
                   '</div>'+
-                  '<div class="col-md-8 pad0">'+
+                  '<div class="col-md-10 pad0 col-sm-10">'+
                     '<div class="listing-info">'+
-                      '<div class="col-md-10 col-sm-10 col-xs-8 pad0">'+
+                      '<div class="col-md-8 col-sm-8 col-xs-8 pad0">'+
                         '<h4 class="li-name"><a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank">'+title+'</a></h4>'+
+                        '<ul class="list-icon">'+
+                          '<li> <i class="fa fa-map-marker"></i> '+location+'</li>'+
+                        '</ul>'+
+                        '<ul class="list-review-icon">'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                        '</ul>'+
                       '</div>'+
-                      '<div class="col-md-2 col-sm-2 col-xs-4 pad0">'+
-                        '<h4 class="btn btn-default" disable><i class="fa fa-usd" aria-hidden="true"></i>'+amount+'</h4>'+
+                      '<div class="col-md-4 col-sm-4 col-xs-4 text-right">'+
+                        '<h4 class="btn btn-default" disable><i class="fa fa-usd"></i>'+amount+'</h4>'+book_now+
                       '</div>'+
-                      '<ul class="list-icon">'+
-                        '<li> <i class="fa fa-map-marker"></i> '+location+'</li>'+
-                      '</ul>'+
-
-                      '<h5><span class="parking_capacity">Parking Capacity</span></h5>'+
-                      '<ul class="list-icon">'+
-                        '<li>RV Types: '+rv_types+'</li>'+
-                        '<li>Upto <u>'+rv_sizes+'</u>  feet long.</li>'+
-                      '</ul>'+
-
-                      '<ul class="list-icon">'+
-                        '<li><i class="fa fa-calendar-check-o"></i> Available till: '+to_date+'</li>'+
-                      '</ul>'+
                     '</div>'+
                   '</div>'+
               '</div>';
 
-          $("#filterig_result").html(full_data);
+            $("#filterig_result").html(full_data);
+            $("#current_location").html('Total places: '+datas.length);
 
           
             geocoder = new google.maps.Geocoder();
             var mapOptions = 
             {
-              zoom: 12
+              zoom: 10,gestureHandling: 'greedy'
             }
             map = new google.maps.Map(document.getElementById('maps'), mapOptions);
             codeAddress(location,amount,id,title);//call the function
@@ -158,9 +162,10 @@ $("#final_search").click(function(){
             //full_module(location,amount,id,title,email,phone_number);//call the function
 
           }
+          listing_pagination(); //pagination listing
 
         }
-        //$("#demo").html(thirdS);
+        
       },
       error: function(){
         alert('error..!');
@@ -168,7 +173,7 @@ $("#final_search").click(function(){
     });
 
   }
-
+  e.preventDefault();
 });
 
 function codeAddress(address,amount,id,title) {
@@ -182,14 +187,218 @@ function codeAddress(address,amount,id,title) {
         position: results[0].geometry.location,
         zoom: 16,
 
-        content: '<a class="map_info_style" href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank"><i class="fa fa-usd" aria-hidden="true"></i>'+amount+'</a>'
+        content: '<a class="map_info_style" href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank"><i class="fa fa-usd"></i>'+amount+'</a>'
       });
-    } else {
-      alert('Geocode was not successful for the following reason: ' + status);
     }
   });
 }
 // PARKING NOW MAIN SEARCH WORK END
+
+
+
+
+
+/* /MY WORKING 14 FEB/ */
+function find_disallow_location_result(){
+  $.ajax({
+    type: 'POST',
+    url:li+'home/find_disallow_location_result',
+    dataType:'json',
+    success: function(data){
+
+      if(data.final==false){
+        $("#filterig_result").html("<p>No data found.</p>");
+      }else{
+        var datas = data.final;
+        var i;
+        var full_data='';
+        for(i=0; i<datas.length;i++){
+          var location = datas[i].location;
+          var amount = datas[i].amount;
+          var id = datas[i].id;
+          var title = datas[i].title;
+
+          var rv_types = datas[i].rv_types;
+          var rv_sizes = datas[i].rv_sizes;
+
+          var to_date = datas[i].to_date;
+          var book = datas[i].book;
+          if (book==1) {
+              var book_now = '<a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank" class="btn btn-book-now">Book now</a>';
+          }else{
+            var book_now = '';
+          }
+
+          full_data +=
+            '<div class="listing mob-space30 space30">'+
+                '<div class="col-md-2 pad0 hidden-xs col-sm-2">'+
+                  '<div class="listing-img bg-image" style="background: rgba(0, 0, 0, 0) url('+li+'assets/images/icons/placeholder-parking.png) no-repeat ;">'+
+                      '<div class="li-overlay">'+
+                        '<div class="li-overlay-inner">'+
+                          '<a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank" class="link"></a>'+
+                        '</div>'+
+                      '</div>'+
+                  '</div>'+
+                '</div>'+
+                '<div class="col-md-10 pad0 col-sm-10">'+
+                  '<div class="listing-info">'+
+                    '<div class="col-md-8 col-sm-8 col-xs-8 pad0">'+
+                      '<h4 class="li-name"><a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank">'+title+'</a></h4>'+
+                      '<ul class="list-icon">'+
+                        '<li> <i class="fa fa-map-marker"></i> '+location+'</li>'+
+                      '</ul>'+
+                      '<ul class="list-review-icon">'+
+                          '<li><i class="fa fa-star"></i></li>'+
+                          '<li><i class="fa fa-star"></i></li>'+
+                          '<li><i class="fa fa-star"></i></li>'+
+                          '<li><i class="fa fa-star"></i></li>'+
+                          '<li><i class="fa fa-star"></i></li>'+
+                      '</ul>'+
+                    '</div>'+
+                    '<div class="col-md-4 col-sm-4 col-xs-4 text-right">'+
+                      '<h4 class="btn btn-default" disable><i class="fa fa-usd"></i>'+amount+'</h4>'+book_now+
+                    '</div>'+
+                  '</div>'+
+                '</div>'+
+            '</div>';
+
+        $("#filterig_result").html(full_data);
+        $("#current_location").html('Total places: '+datas.length);
+
+
+               
+        
+
+        
+          geocoder = new google.maps.Geocoder();
+          var mapOptions = 
+          {
+            zoom: 10,gestureHandling: 'greedy'
+          }
+          map = new google.maps.Map(document.getElementById('maps'), mapOptions);
+          codeAddress(location,amount,id,title);//call the function
+
+          //full_module(location,amount,id,title,email,phone_number);//call the function
+
+        }// for end
+
+        listing_pagination(); //pagination listing
+        
+
+      } //else end
+      
+    },
+    error: function(){
+      alert('error..!');
+    }
+  });
+}
+
+
+function listing_pagination(){
+  var monkeyList = new List('test-list', {
+    valueNames: ['listing'],
+    page: 3,
+    pagination: true
+  });
+} //LISTING PAGINATION
+
+
+function showpos(city,lat,lng){
+
+  var city_name = city;
+
+
+  $.ajax({
+      type: 'POST',
+      url:li+'home/location_data_current',
+      data:{city_name:city_name},
+      dataType:'json',
+      success: function(data){
+
+        if(data.final==false){
+          $("#filterig_result").html("<p>No data found.</p>");
+        }else{
+          var datas = data.final;
+          var i;
+          var full_data='';
+          for(i=0; i<datas.length;i++){
+            var location = datas[i].location;
+            var amount = datas[i].amount;
+            var id = datas[i].id;
+            var title = datas[i].title;
+            var title_link= title.toLowerCase();
+
+            var rv_types = datas[i].rv_types;
+            var rv_sizes = datas[i].rv_sizes;
+
+            var to_date = datas[i].to_date;
+            var book = datas[i].book;
+            if (book==1) {
+              var book_now = '<a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank" class="btn btn-book-now">Book now</a>';
+            }else{
+              var book_now = '';
+            }
+
+            full_data +=
+              '<div class="listing mob-space30 space30">'+
+                  '<div class="col-md-2 pad0 hidden-xs col-sm-2">'+
+                    '<div class="listing-img bg-image" style="background: rgba(0, 0, 0, 0) url('+li+'assets/images/icons/placeholder-parking.png) no-repeat ;">'+
+                        '<div class="li-overlay">'+
+                          '<div class="li-overlay-inner">'+
+                            '<a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank" class="link"></a>'+
+                          '</div>'+
+                        '</div>'+
+                    '</div>'+
+                  '</div>'+
+                  '<div class="col-md-10 pad0 col-sm-10">'+
+                    '<div class="listing-info">'+
+                      '<div class="col-md-8 col-sm-8 col-xs-8 pad0">'+
+                        '<h4 class="li-name"><a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank">'+title+'</a></h4>'+
+                        '<ul class="list-icon">'+
+                          '<li> <i class="fa fa-map-marker"></i> '+location+'</li>'+
+                        '</ul>'+
+                        '<ul class="list-review-icon">'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                            '<li><i class="fa fa-star"></i></li>'+
+                        '</ul>'+
+                      '</div>'+
+                      '<div class="col-md-4 col-sm-4 col-xs-4 text-right">'+
+                        '<h4 class="btn btn-default" disable><i class="fa fa-usd"></i>'+amount+'</h4>'+book_now+
+                      '</div>'+
+                    '</div>'+
+                  '</div>'+
+              '</div>';
+
+            $("#filterig_result").html(full_data);
+            $("#current_location").html('Total places: '+datas.length);
+
+          
+            geocoder = new google.maps.Geocoder();
+            var mapOptions = 
+            {
+              zoom: 12,
+              gestureHandling: 'greedy'
+            }
+            map = new google.maps.Map(document.getElementById('maps'), mapOptions);
+            codeAddress_current(location,amount,id,title,lat,lng);//call the function
+          } //for end
+
+          listing_pagination(); //pagination listing
+
+        }
+      },
+      error: function(){
+        alert('error..!');
+      }
+    });
+}
+
+
+
 
 
 
@@ -317,28 +526,33 @@ function park_now(){
   var from_date = $('#from').val().trim();
   var to_date = $('#to').val().trim();
 
-  if (to_date !== '' && from_date !== '' && id !== '' && m_id !== '' && c_id !== '') {
-    $.ajax({
-      type: 'POST',
-      url:li+'user/park_now',
-      data:{to_date:to_date,from_date:from_date,id:id,m_id:m_id,c_id:c_id},
-      dataType:'json',
-      success: function(response){
+  if (to_date == from_date) {
+    $('#show_payment_status').html('Please changed the date!');
+  }else{
 
-        if (response==1) {
-          window.location.href=li+"user/booking/"+id+"/"+from_date+"/"+m_id+"/"+to_date;
-        }else if(response==3){
-          $('#show_payment_status').html('You can not apply!');
-        }else{
-          $('#show_payment_status').html('Date selected invalid!');
+    if (to_date !== '' && from_date !== '' && id !== '' && m_id !== '' && c_id !== '') {
+      $.ajax({
+        type: 'POST',
+        url:li+'user/park_now',
+        data:{to_date:to_date,from_date:from_date,id:id,m_id:m_id,c_id:c_id},
+        dataType:'json',
+        success: function(response){
+
+          if (response==1) {
+            window.location.href=li+"user/booking/"+id+"/"+from_date+"/"+m_id+"/"+to_date;
+          }else if(response==3){
+            $('#show_payment_status').html('You can not apply!');
+          }else{
+            $('#show_payment_status').html('Date selected invalid!');
+          }
+          
+
+        },
+        error: function(){
+          alert('error host');
         }
-        
-
-      },
-      error: function(){
-        alert('error host');
-      }
-    });
+      });
+    }
   }
 }
 
@@ -797,7 +1011,7 @@ function edit_hosting(value){
       dataType:'json',
       success: function(response){
         if (response == 1) {
-          window.location.href=li+"user/become_a_host_location/";
+          window.location.href=li+"user/become_a_host_location/"+id;
         }else{
           location.reload();
         }
@@ -866,90 +1080,141 @@ function remove_review(value){
 
 /*PARKING*/
 
-function showpos(lat,lng){
+function codeAddress_current(address,amount,id,title,lat,lng) {
+  geocoder.geocode( {address:address}, function(results, status) 
+  {
+    if (status == google.maps.GeocoderStatus.OK){
+      map.setCenter(results[0].geometry.location);//center the map over the result
+      //place a marker at the location
+      //for marker locaton
+      var uluru = {lat: lat, lng: lng}
+      var marker2 = new google.maps.Marker({
+        map: map,
+        position: uluru,
+        icon: li+'assets/images/marker.png'
+      });
 
-  var lat = lat;
-  var lng = lng;
+      var marker = new google.maps.InfoWindow({
+        map: map,
+        position: results[0].geometry.location,
 
+        content: '<a class="map_info_style" href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank"><i class="fa fa-usd"></i>'+amount+'</a>'
+      });
 
-  $.ajax({
+    }
+  });
+}
+
+function handCash_booking(){
+  var hostid = $("#hostid").val().trim();
+  var m_id = $("#m_id").val().trim();
+  var from_date = $("#from_date").val().trim();
+  var to_date = $("#to_date").val().trim();
+  var rv_types = $("#rv_types").val().trim();
+
+  if (hostid !== '' && m_id !== '' && from_date !== '' && to_date !== ' '&& rv_types !== '') {
+    $.ajax({
       type: 'POST',
-      url:li+'home/location_data_current',
-      data:{lat:lat,lng:lng},
+      url:li+'user/booking_handcash',
+      data:{hostid:hostid,m_id:m_id,from_date:from_date,to_date:to_date,rv_types:rv_types},
+      dataType:'json',
+      success: function(response){
+        
+        if (response == 1) {
+          window.location.href=li+'user/booking_overview';
+        }
+        
+      },
+      error: function(){
+        alert('error booking.');
+      }
+    });
+  }
+}
+//PASSWORD CHANGE USER PANEL
+function password_change(){
+  var old_pass = $("#old_pass").val().trim();
+  var new_pass = $("#new_pass").val().trim();
+  var confirm_pass = $("#confirm_pass").val().trim();
+
+  if (new_pass !== '' && old_pass !== '' && confirm_pass !== '') {
+    if (new_pass == confirm_pass) {
+      $.ajax({
+        type: 'POST',
+        url:li+'user/password_change',
+        data:{old_pass:old_pass,new_pass:new_pass,confirm_pass:confirm_pass},
+        dataType:'json',
+        success: function(response){
+
+          $("#old_pass").val('');
+          $("#new_pass").val('');
+          $("#confirm_pass").val('');
+
+          if (response['success']) {
+            $("#show_change_pass").html(response['success']);
+          }else if(response['mismatch']){
+            $("#show_change_pass").html(response['mismatch']);
+          }else{;
+            $("#show_change_pass").html(response['try_new']);
+          }
+
+        },
+        error: function(){
+          alert('error');
+        }
+      });
+    }else{
+      $("#show_change_pass").html('Confirm pass did not match.');
+    }
+    
+  }else{
+    $("#show_change_pass").html('Information incomplete.');
+  }
+
+
+}
+
+function admin_search_user(val){
+  var user_mail = $(val).val().trim();
+  if (user_mail !== '') {
+    $.ajax({
+      type: 'POST',
+      url:li+'user/admin_search_user',
+      data:{user_mail:user_mail},
       dataType:'json',
       success: function(data){
 
-        if(data.final==false){
-          $("#filterig_result").html("<p>No data found.</p>");
+        if(data.final == false){
+          $("#total_user_result").html('<p>No user found.</p>');
         }else{
           var datas = data.final;
           var i;
           var full_data='';
           for(i=0; i<datas.length;i++){
-            var location = datas[i].street;
-            var amount = datas[i].amount;
             var id = datas[i].id;
-            var title = datas[i].title;
-
-            var rv_types = datas[i].rv_types;
-            var rv_sizes = datas[i].rv_sizes;
-
-            var to_date = datas[i].to_date;
-            var images = datas[i].file_name;
+            var user = datas[i].user;
+            var password = datas[i].password;
+            var email = datas[i].email;
+            var phone = datas[i].phone;
+            
 
             full_data +=
-              '<div class="listing mob-space30 space30">'+
-                  '<div class="col-md-4 pad0">'+
-                    '<div class="listing-img bg-image" style="background: rgba(0, 0, 0, 0) url(&quot;'+li+'assets/images/hosts/'+images+'";) no-repeat scroll center center / cover ;">'+
-                        '<div class="li-overlay">'+
-                          '<div class="li-overlay-inner">'+
-                            '<a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank" class="link"></a>'+
-                          '</div>'+
-                        '</div>'+
-                    '</div>'+
-                  '</div>'+
-                  '<div class="col-md-8 pad0">'+
-                    '<div class="listing-info">'+
-                      '<div class="col-md-10 col-sm-10 col-xs-8 pad0">'+
-                        '<h4 class="li-name"><a href="'+li+'home/host_rv/'+id+'/'+title.split(' ').join('-')+'" target="_blank">'+title+'</a></h4>'+
-                      '</div>'+
-                      '<div class="col-md-2 col-sm-2 col-xs-4 pad0">'+
-                        '<h4 class="btn btn-default" disable><i class="fa fa-usd" aria-hidden="true"></i>'+amount+'</h4>'+
-                      '</div>'+
-                      '<ul class="list-icon">'+
-                        '<li> <i class="fa fa-map-marker"></i> '+location+'</li>'+
-                      '</ul>'+
+                '<tr>'+
+                  '<td>'+id+'</td>'+
+                  '<td><a href="'+li+'user/make_user/'+id+'">'+user+'</a></td>'+
+                  '<td>'+password+'</td>'+
+                  '<td>'+email+'</td>'+
+                  '<td>'+phone+'</td>'+
+                '</tr>';
 
-                      '<h5><span class="parking_capacity">Parking Capacity</span></h5>'+
-                      '<ul class="list-icon">'+
-                        '<li>RV Types: '+rv_types+'</li>'+
-                        '<li>Upto <u>'+rv_sizes+'</u>  feet long.</li>'+
-                      '</ul>'+
-
-                      '<ul class="list-icon">'+
-                        '<li><i class="fa fa-calendar-check-o"></i> Available till: '+to_date+'</li>'+
-                      '</ul>'+
-                    '</div>'+
-                  '</div>'+
-              '</div>';
-
-          $("#filterig_result").html(full_data);
-
-          
-            geocoder = new google.maps.Geocoder();
-            var mapOptions = 
-            {
-              zoom: 12
-            }
-            map = new google.maps.Map(document.getElementById('maps'), mapOptions);
-            codeAddress(location,amount,id,title);//call the function
-
+          $("#total_user_result").html(full_data);
           }
-
         }
+
       },
       error: function(){
-        alert('error..!');
+        alert('error');
       }
     });
+  }
 }

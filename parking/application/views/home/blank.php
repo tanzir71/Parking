@@ -19,7 +19,7 @@
 
 					<div class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
 			            <div class="dashModule">
-			                <a href="<?php echo base_url() ?>admin/host_approval">
+			                <a href="<?php echo base_url() ?>admin/host-approval">
 			                    <i class="fa fa-users"></i>
 			                    <h3>BUYER &amp; VENDOR</h3>
 			                </a>
@@ -28,30 +28,9 @@
 
 			        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
 			            <div class="dashModule">
-			                <a href="<?php echo base_url() ?>admin/buyers_vendor">
+			                <a href="<?php echo base_url() ?>admin/host-approval">
 			                    <i class="fa fa-list"></i>
 			                    <h3>HOST LIST</h3>
-			                </a>
-			            </div>
-			        </div>
-
-			        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
-			            <div class="dashModule">
-			                <a href="<?php echo base_url() ?>admin/inbox">
-			                    <i class="fa fa-envelope"></i>
-			                    <h3>MESSAGE</h3>
-			                </a>
-			            </div>
-			        </div>
-
-
-
-
-			        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
-			            <div class="dashModule">
-			                <a href="<?php echo base_url() ?>admin/withdraw_request">
-			                    <i class="fa fa-pause"></i>
-			                    <h3>WITHDRAW REQUEST</h3>
 			                </a>
 			            </div>
 			        </div>
@@ -61,16 +40,6 @@
 			                <a href="<?php echo base_url() ?>admin/payments">
 			                    <i class="fa fa-credit-card"></i>
 			                    <h3>PAYMENTS</h3>
-			                </a>
-			            </div>
-			        </div>
-
-
-			        <div class="col-md-4 col-lg-4 col-sm-4 col-xs-12">
-			            <div class="dashModule">
-			                <a href="<?php echo base_url() ?>admin/accounts">
-			                    <i class="fa fa-pencil-square-o"></i>
-			                    <h3>ACCOUNTS</h3>
 			                </a>
 			            </div>
 			        </div>

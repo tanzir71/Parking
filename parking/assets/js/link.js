@@ -1,6 +1,6 @@
 function links(){
-	//var li="http://desiree.thirdhandbd.com/";
-	var li="http://localhost/parking/";
+	var li="http://betaparking.com/";
+	//var li="http://localhost/parking/";
 	return li;
 }
 

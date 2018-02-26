@@ -334,11 +334,12 @@ li {
 *****************************************************/
 
 .navbar-default {
-    height: 110px;
-    border: none;
-    background: #fff;
+  background: #ffffff none repeat scroll 0 0;
+  border: medium none;
+  box-shadow: 5px -12px 18px #000000;
+  height: 110px;
 }
-
+/*
 .navbar-brand {
     font-family: Pacifico;
     font-size: 26px;
@@ -350,6 +351,17 @@ li {
 
 .navbar-brand span {
     color: #FA824C !important;
+}
+*/
+.navbar-default .navbar-brand {
+  color: #777777;
+  height: 25px;
+  margin: 42px 0;
+  padding: 0 0 0 5px;
+  width: auto;
+}
+.logo-header {
+  height: 25px;
 }
 
 .nav-trigger {
@@ -436,9 +448,9 @@ li {
 
 .header-widget {
   font-family: Montserrat;
-  position: relative;
-  top: -62px;
   left: 12px;
+  position: relative;
+  top: -70px;
 }
 
 .h-login {
@@ -499,11 +511,8 @@ li {
 *****************************************************/
 
 .intro {
-    padding: 186px 0 202px;
-    background-position: 50% 50%;
-    /*background: url(http://placehold.it/1760x650) no-repeat center;*/
-    background: url('../images/sr_img.jpg') no-repeat center;
-    background-size: cover;
+  background: rgba(0, 0, 0, 0) url("../images/slider.jpg") no-repeat fixed center bottom / cover ;
+  padding: 186px 0 202px;
 }
 
 .intro h2 {
@@ -783,7 +792,7 @@ li {
 }
 .listing-info {
   border: medium none;
-  padding: 0 15px 5px;
+  padding: 0 0 0 15px;
   position: relative;
 }
 .li-name {
@@ -830,7 +839,7 @@ li {
 }
 
 .listing-img {
-  height: 180px;
+  height: 110px;
   position: relative;
 }
 .li-overlay {
@@ -865,7 +874,7 @@ li {
 
 .li-overlay-inner {
     position: relative;
-    top: 50%;
+    top: 55%;
     right: 0;
     left: 0;
     display: table;
@@ -1113,7 +1122,7 @@ li {
 /*****************************************************
 *** FOOTER ***
 *****************************************************/
-
+/*
 footer {
     overflow: hidden;
     padding: 32px 0 0;
@@ -1226,6 +1235,22 @@ p.copy {
     color: #fff;
     background: #FA824C;
 }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .bcrumbs {
   bottom: 23px;
@@ -1272,9 +1297,8 @@ p.copy {
 }
 
 .dp-header {
-    padding: 20px 0;
-    border-bottom: 1px solid #f0f2f7;
-    background: #fff;
+  background: #ffffff none repeat scroll 0 0;
+  padding-bottom: 30px;
 }
 
 .dph-info {
@@ -2974,9 +2998,9 @@ select {
         min-width: 50%; /*min-width: 150%*/
     }
     .navbar-default .navbar-toggle {
-        margin-top: -11px;
-        border: none;
-        background: transparent !important;
+      background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+      border: medium none;
+      margin-top: -65px;
     }
     .h-login {
         margin-left: 10px;

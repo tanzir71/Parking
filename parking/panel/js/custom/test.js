@@ -1174,3 +1174,27 @@ function delete_host(value){
   }
 
 }
+function book_now(value){
+    var b_and_id = $(value).val().trim();
+
+	var split = b_and_id.split(":");
+	var book = split[0];
+	var id = split[1];
+
+  	
+  	$.ajax({
+        type: 'POST',
+        url:li+'admin/book_now/',
+        data:{id:id,book:book},
+        dataType:'json',
+        success: function(data){
+        	if (data == 1) {
+        		location.reload();
+        	}
+        },
+        error: function(){
+          alert('Error approval!');
+        }
+    });
+
+}

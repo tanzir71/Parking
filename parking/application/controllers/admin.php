@@ -272,6 +272,27 @@
 		}
 		echo json_encode($msg);
 	}
+	public function book_now(){
+		$id = $this->input->post('id');
+		$book = $this->input->post('book');
+
+		if ($book==0) {
+			$book_c = 1;
+		}else{
+			$book_c = 0;
+		}
+
+		$up_status = array('book' => $book_c );
+		
+		$this->db->where('id', $id);
+		$this->db->update('host', $up_status);
+		if ($this->db->affected_rows()>0) {
+			$msg = 1;
+		}else{
+			$msg = 2;
+		}
+		echo json_encode($msg);
+	}
 
 
 	//user details
@@ -457,10 +478,10 @@
 
 	public function allhost_search(){
 
-		$state = $this->input->post('state');
-		$city = $this->input->post('city');
-		$location = $this->input->post('location');
-		$status = $this->input->post('status');
+		$state = $this->input->get('state');
+		$city = $this->input->get('city');
+		$location = $this->input->get('location');
+		$status = $this->input->get('status');
 
 		$data['s_results']=$this->user_model->allhost_search($state,$city,$location,$status,'host');
 
@@ -478,15 +499,15 @@
 		$data['host_history'] = $this->user_model->host_approval();
 		$data['host_success'] = $this->user_model->host_success();
 
-		$data['title'] = 'Host Review';
-		
+		$data['title'] = 'Host Review';		
 		$this->load->view('home/headar',$data);
-
 		$data['alluser']=$this->setting->getAll_data('alluser');
 
 
-		$this->load->view('admin/allhost_search',$data);
-		
+		$data['status'] = $status;
+
+
+		$this->load->view('admin/allhost_search',$data);		
 		$this->load->view('home/footer');
 	}
 

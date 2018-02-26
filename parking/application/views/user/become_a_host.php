@@ -50,7 +50,7 @@
 
                         <div class="form-group col-sm-6 col-xs-12">
                             <label>Last Name</label>
-                            <input class="form-control" type="text" name="lname" value="<?php echo $user_data->lname; ?>" required=""> 
+                            <input class="form-control" type="text" name="lname" value="<?php echo $user_data->lname; ?>"> 
                         </div>
                         <div class="form-group col-sm-6 col-xs-12">
                             <label>Email</label>
@@ -65,17 +65,7 @@
                         <div class="col-xs-12">
                             <div class="well well-lg clearfix">
                                 <ul class="pagers">
-                                    <?php
-
-                                    $host_ch = $this->user_model->host_data_check($this->session->userdata('airbnb'),$this->session->userdata('web_session'));
-                                    if ($host_ch == FALSE) { ?>
-                                        
-                                        <li class="next pull-right"><button type="submit" class="btn btn-default">Update</button></li>
-                                    <?php }else{ ?>
-                                    
-                                        <li class="previous pull-right"><a href="<?php echo base_url(); ?>user/become_a_host_location" class="btn btn-default">Next</a></li>
-                                        
-                                    <?php } ?>
+                                    <li class="next pull-right"><button type="submit" class="btn btn-default">Update</button></li>
                                 </ul>
                             </div>
                         </div>

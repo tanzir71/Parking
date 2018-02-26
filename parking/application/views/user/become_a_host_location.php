@@ -22,21 +22,21 @@
                             <div class="progress">
                                 <div class="progress-bar"></div>
                             </div>
-                            <a href="<?php echo base_url(); ?>user/become_a_host_location" class="progress-wizard-dot"></a>
+                            <a href="<?php echo base_url(); ?>user/become-a-host-location/<?php echo $host_data->id; ?>" class="progress-wizard-dot"></a>
                         </div>
                         <div class="col-xs-3 progress-wizard-step disabled">
                             <div class="text-center progress-wizard-stepnum">Host Information</div>
                             <div class="progress">
                                 <div class="progress-bar"></div>
                             </div>
-                            <a href="<?php echo base_url(); ?>user/become_a_host_info" class="progress-wizard-dot"></a>
+                            <a href="<?php echo base_url(); ?>user/become-a-host-info/<?php echo $host_data->id; ?>" class="progress-wizard-dot"></a>
                         </div>
                         <div class="col-xs-3 progress-wizard-step disabled">
                             <div class="text-center progress-wizard-stepnum">Review</div>
                             <div class="progress">
                                 <div class="progress-bar"></div>
                             </div>
-                            <a href="<?php echo base_url(); ?>user/become_a_host_review" class="progress-wizard-dot"></a>
+                            <a href="<?php echo base_url(); ?>user/become-a-host-review/<?php echo $host_data->id; ?>" class="progress-wizard-dot"></a>
                         </div>
                     </div>
                     <form class="row" method="POST" action="<?php echo base_url(); ?>user/host_step_two">
@@ -56,15 +56,15 @@
                         <div class="form-group col-sm-6 col-xs-12">
                             <label>Country</label> <span class="required_m">*</span>
                             <input type="hidden" name="host_id" value="<?php echo $host_data->id; ?>">
-                            <input class="form-control" name="country" type="text" id="countries" value="<?php echo $host_data->country; ?>"> 
+                            <input class="form-control" name="country" type="text" id="countries" value="<?php echo $host_data->country; ?>" required="1"> 
                         </div>
                         <div class="form-group col-sm-6 col-xs-12">
                             <label>State</label> <span class="required_m">*</span>
-                            <input class="form-control" name="state" type="text" id="search_state" value="<?php echo $host_data->state; ?>"> 
+                            <input class="form-control" name="state" type="text" id="search_state" value="<?php echo $host_data->state; ?>" required="1"> 
                         </div>
                         <div class="form-group col-sm-6 col-xs-12">
                             <label>City</label> <span class="required_m">*</span>
-                            <input class="form-control" name="city" type="text" id="search_city" value="<?php echo $host_data->city; ?>"> 
+                            <input class="form-control" name="city" type="text" id="search_city" value="<?php echo $host_data->city; ?>" required="1"> 
                         </div>
                         <div class="form-group col-sm-6 col-xs-12">
                             <label>County/Borough</label> <span class="badge">optional</span>
@@ -73,7 +73,7 @@
                         <div class="form-group col-sm-6 col-xs-12">
                             <label>Street Location</label> <span class="required_m">*</span>
                             <input class="form-control" name="street" type="text" id="street" value="<?php echo $host_data->location; ?>" required="1">
-                            <input name="location" type="hidden" name="location" id="address" value="<?php echo $host_data->location; ?>">
+                            <input name="location" type="hidden" name="location" id="address" value="<?php echo $host_data->location; ?>" required="1">
                         </div>
                         <div class="form-group col-sm-6 col-xs-12">
                             <label>ZIP</label> <span class="required_m">*</span>
@@ -93,7 +93,7 @@
                                    <li class="next pull-right"><button type="submit" style="margin-left: 10px" class="btn btn-default">Update &amp; Continue</button></li>
 
 
-                                    <li class="previous pull-right"><a href="<?php echo base_url(); ?>user/become_a_host_info" class="btn btn-default">Next</a></li>
+                                    <li class="previous pull-right"><a href="<?php echo base_url(); ?>user/become-a-host-info/<?php echo $host_data->id; ?>" class="btn btn-default">Next</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -111,8 +111,9 @@
 
       function initAutocomplete_sohel() {
         var map = new google.maps.Map(document.getElementById('map_canvas'), {
-          center: {lat: 36.1848607, lng: -95.9798563},
-          zoom: 4,
+          center: {lat: 23.7807777, lng: 90.3492857},
+          zoom: 7,
+          gestureHandling: 'greedy',
           mapTypeId: 'roadmap'
         });
 
@@ -166,7 +167,8 @@
               icon: icon,
               title: place.name,
               position: place.geometry.location,
-              zoom: 18
+              zoom: 18,
+              gestureHandling: 'greedy'
             }));
 
             if (place.geometry.viewport) {

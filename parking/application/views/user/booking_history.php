@@ -3,13 +3,13 @@
 <div class="home-directory">
     <div class="container">
         <div class="row">
-            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
 
             	<?php include_once'profile_sidebar.php'; ?>
 
             </div>
 
-            <div class="col-xs-12 col-sm-9 col-md-9 col-lg-9">
+            <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
             	<div class="panel panel-default">
             		<div class="panel-heading">
             			<h3 class="panel-title"><i class="fa fa-cog fa-spin"></i> Booking history</h3>
@@ -30,13 +30,14 @@
 									
 								<table class="table table-striped" style="margin-bottom: 30px;border:1px solid #ddd">
 									<thead>
-										<th>Title:</th>
-										<th>Location:</th>
-										<th>Vendor name:</th>
-										<th>Phone number:</th>
-										<th>Email:</th>
-										<th>Amount:</th>
-										<th>Booking Date:</th>
+										<th>Host ID</th>
+										<th>Title</th>
+										<th>Location</th>
+										<th>Vendor name</th>
+										<th>Phone number</th>
+										<th>Email</th>
+										<th>Amount</th>
+										<th>Booking Date</th>
 										<th>Status</th>
 									</thead>
 									<tbody>
@@ -58,6 +59,7 @@
 												$h_query = $this->db->get('host');
 												$h_q_wor = $h_query->row();
 												?>
+													<td><?php echo $h_q_wor->id; ?></td>
 													<td><?php echo $h_q_wor->title; ?></td>
 													<td><?php echo $h_q_wor->location; ?></td>
 
@@ -73,10 +75,12 @@
 													<td><?php echo $value['from_date']; ?> to <?php echo $value['to_date']; ?></td>
 													<td>
 														<?php 
-															if ($value['payment_status']=='success') {
-																echo 'Active';
+															$to_date = strtotime($value['to_date']);
+															$now = strtotime(date("Y-m-d"));
+															if ($to_date<$now) {
+																echo '<span style="color:red">Passed</span>';
 															}else{
-																echo "Passed";
+																echo '<span style="color:green">Active</span>';
 															}
 														?>
 													</td>

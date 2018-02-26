@@ -18,21 +18,21 @@
                             <div class="progress">
                                 <div class="progress-bar"></div>
                             </div>
-                            <a href="<?php echo base_url(); ?>user/become_a_host_location" class="progress-wizard-dot"></a>
+                            <a href="<?php echo base_url(); ?>user/become-a-host-location/<?php echo $host_data->id; ?>" class="progress-wizard-dot"></a>
                         </div>
                         <div class="col-xs-3 progress-wizard-step complete">
                             <div class="text-center progress-wizard-stepnum">Host Information</div>
                             <div class="progress">
                                 <div class="progress-bar"></div>
                             </div>
-                            <a href="<?php echo base_url(); ?>user/become_a_host_info" class="progress-wizard-dot"></a>
+                            <a href="<?php echo base_url(); ?>user/become-a-host-info/<?php echo $host_data->id; ?>" class="progress-wizard-dot"></a>
                         </div>
                         <div class="col-xs-3 progress-wizard-step complete">
                             <div class="text-center progress-wizard-stepnum">Review</div>
                             <div class="progress">
                                 <div class="progress-bar"></div>
                             </div>
-                            <a href="<?php echo base_url(); ?>user/become_a_host_review" class="progress-wizard-dot"></a>
+                            <a href="<?php echo base_url(); ?>user/become-a-host-review/<?php echo $host_data->id; ?>" class="progress-wizard-dot"></a>
                         </div>
                     </div>
                     <form class="row" method="POST" action="<?php echo base_url(); ?>user/host_submit">
@@ -74,10 +74,10 @@
                         
                         
                         <div class="col-sm-6 col-xs-12 become_review">
-                            <span class="required_m">*</span> <strong>RV Types</strong>: <?php echo $host_data->rv_types; ?>
+                            <span class="required_m">*</span> <strong>Vehicles Types</strong>: <?php echo $host_data->rv_types; ?>
                         </div>
                         <div class="col-sm-6 col-xs-12 become_review">
-                            <span class="required_m">*</span> <strong>RV Sizes</strong>: <?php echo $host_data->rv_sizes; ?> feet long.
+                            <span class="required_m">*</span> <strong>Number of spaces</strong>: <?php echo $host_data->rv_sizes; ?> feet long.
                         </div>
 
 
@@ -107,26 +107,6 @@
                         </div>
 
 
-                        <?php  $results = $this->user_model->get_host_by_data($host_data->id,$host_data->userid,'files'); ?>
-                        <div class="col-sm-12 col-xs-12 become_review">
-                            <span class="required_m">*</span> <strong>Images </strong>:  <span class="badge badge-success"><?php echo $results->num_rows(); ?></span>
-                        </div>
-
-                        <?php
-                        if ($results->num_rows() > 0) { 
-                        foreach ($results->result_array() as $value) { ?>
-
-                            <div class="col-sm-4 col-xs-12 become_review">
-                                <img src="<?php echo base_url() ?>assets/images/hosts/<?php echo $value['file_name']; ?>" class="img-responsive" alt="Image">
-                            </div>
-
-                        <?php }} ?>
-
-
-
-
-
-
 
                         <div class="col-xs-12 checkboxArea">
                             <div class="checkbox">
@@ -137,7 +117,7 @@
                         <div class="col-xs-12">
                             <div class="well well-lg clearfix">
                                 <ul class="pagers">
-                                    <li class="previous pull-left"><a href="<?php echo base_url(); ?>user/become_a_host_info" class="hideContent btn btn-default">Back</a></li>
+                                    <li class="previous pull-left"><a href="<?php echo base_url(); ?>user/become-a-host-info/<?php echo $host_data->id; ?>" class="hideContent btn btn-default">Back</a></li>
                                     <li class="next pull-right"><button type="submit" class="btn btn-default">Submit</button></li>
                                 </ul>
                             </div>
