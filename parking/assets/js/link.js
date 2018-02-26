@@ -1,5 +1,5 @@
 function links(){
-	var li="http://betaparking.com/";
+	var li="https://betaparking.com/";
 	//var li="http://localhost/parking/";
 	return li;
 }

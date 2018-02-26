@@ -15,7 +15,7 @@
 |
 */
 //$config['base_url']	= 'http://localhost/parking/';
-$config['base_url']	= 'http://betaparking.com/';
+$config['base_url']	= 'https://betaparking.com/';
 
 /*
 |--------------------------------------------------------------------------
