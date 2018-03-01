@@ -44,51 +44,23 @@
 </div>
 
 <script type="text/javascript">
-/*
-var monkeyList = new List('test-list', {
-  valueNames: ['name'],
-  page: 3,
-  pagination: true
-});
-*/
 
-
-
-
-
-
-
-var map, infoWindow;
+var infoWindow;
 function initAutocomplete() {
-    map = new google.maps.Map(document.getElementById('maps'), {
-      //center: {lat: 23.81054861928934, lng: 90.41211605072021},
-      //zoom: 10,gestureHandling: 'greedy'
-    });
-    infoWindows = new google.maps.Marker;
+    infoWindow = new google.maps.Marker;
 
-    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(function(position) {
-          var pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          //showpos(position.coords.latitude,position.coords.longitude); //the function call the ajax
-          codeLatLng(position.coords.latitude,position.coords.longitude); 
-          //alert(position.coords.longitude);
-
-          /*infoWindows.setPosition(pos);
-          infoWindows.setContent('<p class="map-infoWindow"><img src="<?php echo base_url(); ?>assets/images/marker.png" class="img-responsive"></p>');
-          infoWindows.open(map);
-          map.setCenter(pos);*/
-
-          /*var uluru = {lat: position.coords.latitude, lng: position.coords.longitude};
-          var marker = new google.maps.Marker({
-            position: uluru,
-            map: map,
-            icon: 'assets/images/marker.png'
-          });*/
-      }, function() {
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        codeLatLng(position.coords.latitude,position.coords.longitude);
+      },
+      function() {
+          handleLocationError(true, infoWindow, map.getCenter());
       });
+    }
 
 }
 
@@ -132,3 +104,4 @@ $(document).ready(function() {
 });
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKf3D0CKv98W_EGTk5QfKANDh0CZuAlNc&libraries=places&callback=initAutocomplete" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
